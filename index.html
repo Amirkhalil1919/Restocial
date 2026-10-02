@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Small Restaurant Setup & Financial Planner — PKR</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍕</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,100 +17,64 @@
   --money:#1e7d43; --bad:#c22f2f;
   --shadow:0 12px 32px rgba(23,46,35,.09);
   --awn-a:#14614a; --awn-b:#f2f4ec;
+  --head-a:#0e4a38; --head-b:#0a3a2c; --section-ink:#0e4a38;
+  color-scheme:light;
 }
 [data-theme="dark"]{
-  --bg:#0d120f; --card:#151c17; --card2:#1a231d; --ink:#e7eee7; --muted:#96a89b;
-  --line:#26312a; --line2:#35443b; --chip:#1d2721;
+  --bg:#0d120f; --card:#151c17; --card2:#1a231d; --ink:#e7eee7; --muted:#9db1a4;
+  --line:#26312a; --line2:#3a4a40; --chip:#223028;
   --green:#2fae7c; --green-deep:#27996c; --green-t:#143126; --on-green:#06130d;
   --amber:#ff9e3d; --amber-t:#332413;
   --money:#5bc985; --bad:#ff8080;
   --shadow:0 12px 32px rgba(0,0,0,.4);
   --awn-a:#1f6f52; --awn-b:#111813;
+  --head-a:#0b2f22; --head-b:#082018; --section-ink:#8fdcb4;
+  color-scheme:dark;
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+*{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0; font-family:"Archivo",system-ui,sans-serif; color:var(--ink);
-  background:var(--bg);
-  background-image:radial-gradient(color-mix(in srgb,var(--line) 65%,transparent) 1px, transparent 1px);
-  background-size:26px 26px;
-  font-size:15px; line-height:1.45;
-  transition:background .25s,color .25s;
-}
+body{margin:0; font-family:"Archivo",system-ui,sans-serif; color:var(--ink); background:var(--bg); background-image:radial-gradient(color-mix(in srgb,var(--line) 65%,transparent) 1px, transparent 1px); background-size:26px 26px; font-size:15px; line-height:1.45; transition:background .25s,color .25s}
 h1,h2,h3,.display{font-family:"Bricolage Grotesque","Archivo",sans-serif}
-button{font-family:inherit; cursor:pointer; touch-action: manipulation;}
-input,select{font-family:inherit; color:inherit; touch-action: manipulation;}
+button{font-family:inherit; cursor:pointer}
+input,select{font-family:inherit; color:inherit}
 :focus-visible{outline:2px solid var(--amber); outline-offset:2px; border-radius:6px}
 .tabnum, .grid td, .grid input{font-variant-numeric:tabular-nums}
-
-/* ---------- header ---------- */
-header{
-  background:linear-gradient(120deg,var(--green-deep),color-mix(in srgb,var(--green-deep) 80%,#0a2e22));
-  color:#f2f7f1; padding:26px clamp(16px,4vw,48px) 22px; position:relative; overflow:hidden;
-}
-header::after{content:""; position:absolute; inset:0;
-  background:radial-gradient(600px 220px at 85% -20%, rgba(255,255,255,.14), transparent 70%); pointer-events:none}
+header{background:linear-gradient(120deg,var(--head-a),var(--head-b)); color:#f2f7f1; padding:26px clamp(16px,4vw,48px) 22px; position:relative; overflow:hidden}
+header::after{content:""; position:absolute; inset:0; background:radial-gradient(600px 220px at 85% -20%, rgba(255,255,255,.14), transparent 70%); pointer-events:none}
 .hwrap{max-width:1180px; margin:auto; display:flex; gap:20px; align-items:center; justify-content:space-between; flex-wrap:wrap; position:relative; z-index:1}
 .brand{display:flex; gap:16px; align-items:center}
-.mark{
-  width:58px;height:58px;flex:0 0 58px;border-radius:14px;display:grid;place-items:center;
-  background:var(--amber); color:#241203; box-shadow:0 6px 18px rgba(0,0,0,.28); transform:rotate(-4deg);
-}
+.mark{width:58px;height:58px;flex:0 0 58px;border-radius:14px;display:grid;place-items:center; background:var(--amber); color:#241203; box-shadow:0 6px 18px rgba(0,0,0,.28); transform:rotate(-4deg)}
 .mark svg{width:34px;height:34px}
 .brand h1{margin:0; font-size:clamp(22px,3.4vw,34px); font-weight:800; letter-spacing:-.5px; line-height:1.05}
 .brand p{margin:4px 0 0; color:#cfe3d6; font-size:13.5px}
 .brand p b{color:#ffd8a8; font-weight:600}
 .hactions{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-.pill{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); color:#fff;
-  padding:6px 12px; border-radius:999px; font-weight:700; font-size:13px; letter-spacing:.4px}
-.ghost{
-  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.28); color:#fff;
-  padding:7px 13px; border-radius:9px; font-weight:600; font-size:13px; transition:.18s;
-}
+.pill{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); color:#fff; padding:6px 12px; border-radius:999px; font-weight:700; font-size:13px; letter-spacing:.4px}
+.ghost{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.28); color:#fff; padding:7px 13px; border-radius:9px; font-weight:600; font-size:13px; transition:.18s}
 .ghost:hover{background:rgba(255,255,255,.22); transform:translateY(-1px)}
 .ghost:active{transform:scale(.97)}
 .ghost svg{width:15px;height:15px;vertical-align:-2px;margin-right:5px}
-
-/* Sync Status Indicator */
-#sync-status {
-  font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-#sync-status.synced { color: #a7f3d0; }
-#sync-status.offline { color: #fca5a5; }
-#sync-status.saving { color: #fde68a; }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
-/* awning */
+#sync-status{font-size:11px; font-weight:600; display:flex; align-items:center; gap:5px; background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:20px; border:1px solid rgba(255,255,255,0.2)}
+#sync-status.synced{color:#a7f3d0}
+#sync-status.offline{color:#fca5a5}
+#sync-status.saving{color:#fde68a}
+.sync-dot{width:6px; height:6px; border-radius:50%; background:currentColor}
 .awning{position:relative; height:15px; background:repeating-linear-gradient(90deg,var(--awn-a) 0 34px,var(--awn-b) 34px 68px); transition:.25s}
-.awning::after{content:""; position:absolute; left:0; right:0; top:100%; height:16px;
-  background:
-   radial-gradient(circle 16px at 17px 0,var(--awn-a) 97%,transparent) 0 0/68px 16px repeat-x,
-   radial-gradient(circle 16px at 17px 0,var(--awn-b) 97%,transparent) 34px 0/68px 16px repeat-x;
-}
-
-/* ---------- sticky zone ---------- */
-.sticky-zone{position:sticky; top:0; z-index:60; background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:blur(9px); border-bottom:1px solid var(--line); margin-top:0}
+.awning::after{content:""; position:absolute; left:0; right:0; top:100%; height:16px; background:radial-gradient(circle 16px at 17px 0,var(--awn-a) 97%,transparent) 0 0/68px 16px repeat-x, radial-gradient(circle 16px at 17px 0,var(--awn-b) 97%,transparent) 34px 0/68px 16px repeat-x}
+.sticky-zone{position:sticky; top:0; z-index:60; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:blur(9px); border-bottom:1px solid var(--line); margin-top:16px}
 .ticker{max-width:1180px; margin:auto; padding:12px clamp(16px,4vw,48px) 6px; display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
 .tick{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:9px 13px; box-shadow:0 4px 14px rgba(23,46,35,.05)}
 .tick span{display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--muted); font-weight:700}
 .tick b{display:block; font-family:"Bricolage Grotesque",sans-serif; font-size:clamp(15px,1.8vw,21px); font-weight:800; margin-top:1px}
 .tick i{display:block; font-style:normal; font-size:11px; color:var(--muted)}
 .tick b.pos{color:var(--money)} .tick b.neg{color:var(--bad)}
-.tabs{max-width:1180px; margin:auto; padding:8px clamp(16px,4vw,48px) 10px; display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;}
-.tabs::-webkit-scrollbar { display: none; }
-.tab{
-  border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:999px;
-  padding:8px 16px; font-weight:600; font-size:13.5px; white-space:nowrap; display:flex; gap:9px; align-items:center; transition:.18s;
-}
+.tabs{max-width:1180px; margin:auto; padding:8px clamp(16px,4vw,48px) 10px; display:flex; gap:8px; overflow-x:auto}
+.tab{border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:999px; padding:8px 16px; font-weight:600; font-size:13.5px; white-space:nowrap; display:flex; gap:9px; align-items:center; transition:.18s}
 .tab svg{width:15px;height:15px; stroke:currentColor}
 .tab:hover{transform:translateY(-1px); border-color:var(--line2)}
 .tab.active{background:var(--green); border-color:var(--green); color:var(--on-green); box-shadow:0 6px 16px color-mix(in srgb,var(--green) 40%,transparent)}
 .tab b{font-weight:800; background:var(--chip); color:var(--ink); border-radius:999px; padding:1px 8px; font-size:11.5px}
 .tab.active b{background:rgba(255,255,255,.22); color:inherit}
-
-/* ---------- layout : everything stacked top-to-bottom ---------- */
 main{max-width:1180px; margin:26px auto 60px; padding:0 clamp(16px,4vw,48px)}
 .panel{display:none}
 .panel.active{display:block; animation:rise .4s ease both}
@@ -124,10 +88,8 @@ main{max-width:1180px; margin:26px auto 60px; padding:0 clamp(16px,4vw,48px)}
 .card h3{margin:0 0 10px; font-size:16px; font-weight:800}
 .hint{font-size:12px; color:var(--muted)}
 .card-head .hint{max-width:460px; text-align:right}
-
-/* ---------- tables ---------- */
-.tbl-wrap{overflow-x:auto; -webkit-overflow-scrolling: touch;}
-table.grid{width:100%; border-collapse:collapse; margin-top:8px; min-width:520px}
+.tbl-wrap{overflow-x:auto}
+table.grid{width:100%; border-collapse:collapse; margin-top:8px; min-width:560px}
 .grid th{font-size:10.5px; text-transform:uppercase; letter-spacing:1.1px; color:var(--muted); text-align:left; padding:7px 8px; border-bottom:2px solid var(--line)}
 .grid th.num{text-align:right}
 .grid td{padding:5px 8px; border-bottom:1px solid var(--line); vertical-align:middle}
@@ -139,52 +101,41 @@ table.grid{width:100%; border-collapse:collapse; margin-top:8px; min-width:520px
 .grid tfoot td{border-bottom:0; border-top:2px solid var(--line2); padding-top:9px; font-weight:700}
 input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield;appearance:textfield}
-.grid input.txt{width:100%; min-width:140px; border:0; background:transparent; padding:5px 2px; font-size:14px; border-bottom:1px dashed transparent; font-weight:500}
+.grid input.txt{width:100%; min-width:120px; border:0; background:transparent; padding:5px 2px; font-size:14px; border-bottom:1px dashed transparent; font-weight:500}
 .grid input.txt:hover{border-bottom-color:var(--line2)}
 .grid input.txt:focus{border-bottom:1px solid var(--amber); outline:none}
-.grid select.txt{width:100%; min-width:160px; border:0; background:transparent; padding:5px 2px; font-size:14px; border-bottom:1px dashed transparent; font-weight:500; cursor:pointer}
+.grid select.txt{width:100%; min-width:140px; border:0; background:transparent; padding:5px 2px; font-size:14px; border-bottom:1px dashed transparent; font-weight:500; cursor:pointer}
 .grid select.txt:hover{border-bottom-color:var(--line2)}
 .grid select.txt:focus{border-bottom:1px solid var(--amber); outline:none}
 .grid input[type=number]{width:96px; text-align:right; border:1px solid transparent; background:var(--card2); border-radius:8px; padding:5px 8px; font-size:14px; transition:.15s}
 .grid input[type=number]:hover{border-color:var(--line2)}
 .grid input[type=number]:focus{border-color:var(--amber); background:var(--card); outline:none}
-.delcell{width:36px; text-align:center}
-.del{border:0; background:transparent; color:var(--muted); font-size:14px; width:32px; height:32px; border-radius:7px; opacity:.35; transition:.15s; display:grid; place-items:center;}
+.grid input.auto-cost{background:var(--green-t); color:var(--money); font-weight:700; border:1px solid color-mix(in srgb,var(--green) 45%,transparent)}
+.delcell{width:30px; text-align:center}
+.del{border:0; background:transparent; color:var(--muted); font-size:14px; width:26px; height:26px; border-radius:7px; opacity:.35; transition:.15s}
 tr:hover .del{opacity:1}
 .del:hover{background:color-mix(in srgb,var(--bad) 14%,transparent); color:var(--bad)}
-.btn-add{
-  width:100%; margin-top:12px; border:1.6px dashed var(--line2); background:transparent; color:var(--muted);
-  padding:12px; border-radius:11px; font-weight:700; font-size:14px; letter-spacing:.3px; transition:.18s;
-}
+.btn-add{width:100%; margin-top:12px; border:1.6px dashed var(--line2); background:transparent; color:var(--muted); padding:9px; border-radius:11px; font-weight:700; font-size:13px; letter-spacing:.3px; transition:.18s}
 .btn-add:hover{border-color:var(--green); color:var(--green); background:var(--green-t); transform:translateY(-1px)}
 .btn-add:active{transform:scale(.99)}
 .flash{animation:flash .55s ease}
 @keyframes flash{0%{background:color-mix(in srgb,var(--amber) 26%,transparent); border-radius:6px}100%{background:transparent}}
-
-/* flag (can defer / unnecessary) */
-.flagcell{width:40px; text-align:center}
-.flag{border:1px solid var(--line2); background:transparent; color:var(--muted); width:32px; height:32px; border-radius:7px; font-size:14px; opacity:.5; transition:.15s; display:grid; place-items:center;}
+.flagcell{width:34px; text-align:center}
+.flag{border:1px solid var(--line2); background:transparent; color:var(--muted); width:26px; height:26px; border-radius:7px; font-size:13px; opacity:.5; transition:.15s}
 .flag:hover{opacity:1; border-color:var(--amber); color:var(--amber)}
 .flag.on{background:var(--amber); border-color:var(--amber); color:#241203; opacity:1}
 tr.flagged{background:color-mix(in srgb,var(--amber) 6%,transparent)}
 tr.flagged td:first-child{box-shadow:inset 3px 0 0 var(--amber)}
 tr.flagged td.total{color:var(--muted); text-decoration:line-through}
 .flagnote{font-size:11px; color:var(--amber); margin-top:2px; font-weight:600}
-
-/* review card + segmented control */
-.review{border-color:color-mix(in srgb,var(--amber) 45%,var(--line));
-  background:linear-gradient(180deg,color-mix(in srgb,var(--amber) 7%,var(--card)),var(--card))}
+.review{border-color:color-mix(in srgb,var(--amber) 45%,var(--line)); background:linear-gradient(180deg,color-mix(in srgb,var(--amber) 7%,var(--card)),var(--card))}
 .seg{display:inline-flex; border:1px solid var(--line2); border-radius:999px; overflow:hidden}
-.seg button{border:0; background:transparent; padding:8px 16px; font-weight:700; font-size:12.5px; color:var(--muted); transition:.15s}
+.seg button{border:0; background:transparent; padding:6px 14px; font-weight:700; font-size:12.5px; color:var(--muted); transition:.15s}
 .seg button.active{background:var(--amber); color:#241203}
-
-/* switch */
-.sw{appearance:none; width:42px; height:24px; border-radius:99px; background:var(--line2); position:relative; cursor:pointer; transition:.2s; flex:0 0 42px}
-.sw::after{content:""; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,.25); transition:.2s}
+.sw{appearance:none; width:42px; height:23px; border-radius:99px; background:var(--line2); position:relative; cursor:pointer; transition:.2s; flex:0 0 42px}
+.sw::after{content:""; position:absolute; top:3px; left:3px; width:17px; height:17px; border-radius:50%; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,.25); transition:.2s}
 .sw:checked{background:var(--green)}
-.sw:checked::after{left:21px}
-
-/* ---------- financial model ---------- */
+.sw:checked::after{left:22px}
 .krow{display:flex; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px dashed var(--line); font-size:14px}
 .krow span{color:var(--muted)}
 .krow b{font-variant-numeric:tabular-nums}
@@ -205,104 +156,89 @@ tr.flagged td.total{color:var(--muted); text-decoration:line-through}
 .field span{font-size:13px; color:var(--muted); font-weight:500}
 .field input{width:86px; text-align:right; border:1px solid var(--line); background:var(--card2); border-radius:8px; padding:6px 8px; font-weight:700}
 .field input:focus{border-color:var(--amber); outline:none}
-
-/* Recipe card specific styles */
-.recipe-price-input{
-  width:80px; text-align:right; border:1px solid transparent; background:var(--card2); 
-  border-radius:6px; padding:4px 8px; font-weight:700; font-size:14px;
-}
+.recipe-price-input{width:80px; text-align:right; border:1px solid transparent; background:var(--card2); border-radius:6px; padding:4px 8px; font-weight:700; font-size:14px}
 .recipe-price-input:hover{border-color:var(--line2)}
 .recipe-price-input:focus{border-color:var(--amber); background:var(--card); outline:none}
-.sync-indicator{
-  display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--green); 
-  font-weight:600; margin-left:8px; opacity:0.7;
-}
+.sync-indicator{display:inline-flex; align-items:center; gap:4px; font-size:10px; color:var(--green); font-weight:600; margin-left:8px; opacity:0.7}
 .sync-indicator svg{width:12px; height:12px; stroke:currentColor}
 .margin-good{color:var(--money) !important}
 .margin-low{color:var(--amber) !important}
 .margin-bad{color:var(--bad) !important}
-
-/* footer */
+.pnl-controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px}
+.pnl-period-selector{display:inline-flex; border:1px solid var(--line2); border-radius:999px; overflow:hidden}
+.pnl-period-btn{border:0; background:transparent; padding:8px 16px; font-weight:700; font-size:12.5px; color:var(--muted); cursor:pointer; transition:.15s}
+.pnl-period-btn.active{background:var(--green); color:var(--on-green)}
+.pnl-period-btn:hover:not(.active){background:var(--card2)}
+.pnl-field-inline{display:flex; align-items:center; gap:8px; font-size:13px}
+.pnl-field-inline label{color:var(--muted); font-weight:600}
+.pnl-field-inline input{width:80px; text-align:right; border:1px solid var(--line); background:var(--card2); border-radius:6px; padding:6px 8px; font-weight:700; font-size:13px}
+.pnl-field-inline input:focus{border-color:var(--amber); outline:none}
+.pnl-table-wrap{overflow-x:auto; margin:0 -18px; padding:0 18px}
+.pnl-table{width:100%; border-collapse:collapse; min-width:700px}
+.pnl-table th,.pnl-table td{padding:6px 10px; text-align:right; border-bottom:1px solid var(--line); font-size:13px; white-space:nowrap}
+.pnl-table th:first-child,.pnl-table td:first-child{text-align:left; position:sticky; left:0; background:var(--card); z-index:2; min-width:220px; border-right:1px solid var(--line)}
+.pnl-table thead th{background:var(--card2); font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-weight:700; position:sticky; top:0; z-index:3}
+.pnl-table thead th:first-child{z-index:4}
+.pnl-table tbody tr.section-header td{background:var(--green-t); font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--section-ink); padding:8px 10px}
+.pnl-table tbody tr.section-header td:first-child{background:var(--green-t)}
+.pnl-table tbody tr.subtotal td{background:var(--card2); font-weight:700; border-top:2px solid var(--line2); border-bottom:2px solid var(--line2)}
+.pnl-table tbody tr.subtotal td:first-child{background:var(--card2)}
+.pnl-table tbody tr.grand-total td{background:var(--green); color:var(--on-green); font-weight:800; font-size:14px; border-top:3px solid var(--green-deep); border-bottom:3px solid var(--green-deep)}
+.pnl-table tbody tr.grand-total td:first-child{background:var(--green)}
+.pnl-table tbody tr.loss td{color:var(--bad)}
+.pnl-table tbody tr.loss td:first-child{background:var(--card)}
+.pnl-table tbody tr:hover td{background:color-mix(in srgb,var(--green-t) 40%,transparent)}
+.pnl-table tbody tr:hover td:first-child{background:var(--card)}
+.pnl-table tbody tr.section-header:hover td,.pnl-table tbody tr.subtotal:hover td,.pnl-table tbody tr.grand-total:hover td{background:inherit}
+.pnl-table .indent-1{padding-left:24px !important}
+.pnl-table .indent-2{padding-left:40px !important; font-size:12px; color:var(--muted)}
+.pnl-table .pct{font-size:11px; color:var(--muted); font-weight:500}
+.pnl-table tbody td:not(:first-child):not(.pct){cursor:pointer}
+.pnl-table tbody td:not(:first-child):not(.pct):hover{background:var(--amber-t); box-shadow:inset 0 0 0 1.5px var(--amber); border-radius:4px}
+.pnl-assumptions{background:var(--card2); border-radius:12px; padding:16px; margin-top:20px; border:1px solid var(--line)}
+.pnl-assumptions h4{margin:0 0 12px; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; font-weight:700}
+.pnl-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px}
+.pnl-field{display:flex; flex-direction:column; gap:4px}
+.pnl-field label{font-size:12px; color:var(--muted); font-weight:600}
+.pnl-field input{width:100%; padding:8px; border:1px solid var(--line); border-radius:6px; font-size:14px; text-align:right; background:var(--card); color:var(--ink)}
+.pnl-field input:focus{border-color:var(--amber); outline:none}
+.pnl-modal{position:fixed; inset:0; z-index:200; background:rgba(10,20,15,.45); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:16px}
+[data-theme="dark"] .pnl-modal{background:rgba(0,0,0,.62)}
+.pnl-modal[hidden]{display:none}
+.pnl-modal-card{background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); max-width:900px; width:100%; max-height:86vh; display:flex; flex-direction:column; overflow:hidden}
+.pnl-modal-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:16px 18px; border-bottom:1px solid var(--line)}
+.pnl-modal-head h3{margin:2px 0 0; font-size:17px; font-weight:800}
+.pnl-modal-close{border:0; background:var(--card2); color:var(--muted); width:32px; height:32px; border-radius:8px; font-size:15px; cursor:pointer}
+.pnl-modal-close:hover{background:var(--amber-t); color:var(--amber)}
+.pnl-modal-body{padding:14px 18px 18px; overflow:auto}
+.dtl-wrap{overflow-x:auto}
+.dtl-table{width:100%; border-collapse:collapse; margin:8px 0}
+.dtl-table th,.dtl-table td{padding:6px 8px; border-bottom:1px solid var(--line); font-size:13px; text-align:right; white-space:nowrap}
+.dtl-table th:first-child,.dtl-table td:first-child{text-align:left; white-space:normal}
+.dtl-table th{font-size:10.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); background:var(--card2)}
+.dtl-table tr.dtl-total td{font-weight:800; border-top:2px solid var(--line2); background:var(--card2)}
+.dtl-section{margin:14px 0 4px; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--amber)}
+.dtl-note{font-size:12px; color:var(--muted); margin-top:10px}
 footer{border-top:1px solid var(--line); background:var(--card); padding:26px clamp(16px,4vw,48px); margin-top:10px}
 footer .fwrap{max-width:1180px; margin:auto; font-size:12.5px; color:var(--muted)}
 footer a{color:var(--green); font-weight:600; text-decoration:none}
 footer a:hover{text-decoration:underline}
 footer b{color:var(--ink)}
-
-/* =========================================
-   MOBILE & TOUCH OPTIMIZATIONS
-   ========================================= */
-@media (max-width: 768px) {
-  /* Header */
-  .hwrap { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .hactions { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-  .brand h1 { font-size: 22px; }
-  .brand p { font-size: 13px; }
-  
-  /* Ticker */
-  .ticker { grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 16px 8px; }
-  .tick { padding: 8px 10px; }
-  .tick b { font-size: 16px; }
-  .tick i { font-size: 10px; }
-  
-  /* Tabs */
-  .tabs { padding: 8px 16px; gap: 6px; }
-  .tab { padding: 8px 12px; font-size: 13px; }
-  
-  /* Cards */
-  .card { padding: 14px; border-radius: 12px; }
-  .card-head { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .card-head .hint { text-align: left; max-width: 100%; margin-top: 4px; }
-  
-  /* Tables & Inputs (Prevent iOS zoom, improve touch targets) */
-  .grid { min-width: 480px; }
-  .grid th, .grid td { padding: 8px 6px; }
-  .grid input[type="number"], 
-  .grid input.txt, 
-  .grid select.txt,
-  .field input,
-  .recipe-price-input {
-    font-size: 16px !important; /* Prevents iOS auto-zoom on focus */
-    padding: 8px 6px;
-    min-height: 42px; /* Better touch target */
-  }
-  .grid input[type="number"] { width: 80px; }
-  .del, .flag { width: 36px; height: 36px; min-width: 36px; }
-  
-  /* Recipe Card Header Mobile Layout */
-  .card-head > div:last-child { 
-    text-align: left !important; 
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .recipe-price-input { width: 100%; margin-top: 4px; text-align: left; }
-  .sync-indicator { margin-left: 0; margin-top: 4px; display: block; }
-  
-  /* Financial Model */
-  .krow { flex-direction: column; gap: 2px; align-items: flex-start; padding: 8px 0; }
-  .krow b { margin-top: 2px; }
-  .krow.big b { font-size: 22px; }
+@media (max-width:900px){
+  .ticker{grid-template-columns:repeat(2,1fr)}
+  .card-head .hint{text-align:left}
+  .pnl-grid{grid-template-columns:1fr 1fr}
+  .pnl-table th:first-child,.pnl-table td:first-child{min-width:160px; font-size:12px}
+  .mode-cell select{font-size:11px; padding:4px 2px; min-width:60px !important}
 }
-
-@media (max-width: 480px) {
-  .ticker { grid-template-columns: 1fr; }
-  .hactions { justify-content: flex-start; }
-  .pill { font-size: 12px; padding: 4px 8px; }
-  .ghost { padding: 8px 10px; font-size: 13px; }
-  .ghost svg { width: 14px; height: 14px; }
-  #sync-status { font-size: 10px; padding: 4px 8px; }
+@media (max-width:600px){
+  .pnl-grid{grid-template-columns:1fr}
+  .pnl-controls{flex-direction:column; align-items:stretch}
+  table.grid{min-width:480px}
+  .grid input[type=number]{width:70px; font-size:13px; padding:4px 6px}
+  .grid input.txt,.grid select.txt{min-width:80px; font-size:13px}
 }
-
-@media print{
-  .sticky-zone,.awning,.hactions,.btn-add,.delcell,.flagcell,.tabs,.seg{display:none!important}
-  .panel{display:block!important}
-  body{background:#fff}
-  .card{box-shadow:none; border:1px solid #bbb; break-inside:avoid}
-  header{background:#14614a; -webkit-print-color-adjust:exact}
-}
+@media print{.sticky-zone,.awning,.hactions,.btn-add,.delcell,.flagcell,.tabs,.seg,.pnl-modal{display:none!important}.panel{display:block!important}body{background:#fff}.card{box-shadow:none; border:1px solid #bbb; break-inside:avoid}header{background:#14614a; -webkit-print-color-adjust:exact}}
 </style>
 </head>
 <body>
@@ -310,22 +246,12 @@ footer b{color:var(--ink)}
 <header>
   <div class="hwrap">
     <div class="brand">
-      <div class="mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
-          <path d="M12 21.5 3.4 5.4A11.2 11.2 0 0 1 12 1.8a11.2 11.2 0 0 1 8.6 3.6Z" fill="currentColor" stroke="none"/>
-          <circle cx="9.6" cy="8.4" r="1.5" fill="#7a3b06" stroke="none"/>
-          <circle cx="14" cy="12.6" r="1.5" fill="#7a3b06" stroke="none"/>
-          <circle cx="11.2" cy="16" r="1.3" fill="#7a3b06" stroke="none"/>
-        </svg>
-      </div>
-      <div>
-        <h1>Small Restaurant Setup &amp; Financial Planner</h1>
-        <p>Pizza · Burger · Shawarma · Fries · <b>Chai, Tea &amp; Coffee</b> &nbsp;—&nbsp; priced for the Pakistan market · every field editable</p>
-      </div>
+      <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21.5 3.4 5.4A11.2 11.2 0 0 1 12 1.8a11.2 11.2 0 0 1 8.6 3.6Z" fill="currentColor" stroke="none"/><circle cx="9.6" cy="8.4" r="1.5" fill="#7a3b06" stroke="none"/><circle cx="14" cy="12.6" r="1.5" fill="#7a3b06" stroke="none"/><circle cx="11.2" cy="16" r="1.3" fill="#7a3b06" stroke="none"/></svg></div>
+      <div><h1>Small Restaurant Setup &amp; Financial Planner</h1><p>Pizza · Burger · Shawarma · Fries · <b>Chai, Tea &amp; Coffee</b> &nbsp;—&nbsp; priced for the Pakistan market · every field editable</p></div>
     </div>
     <div class="hactions">
       <span class="pill">₨ PKR</span>
-      <div id="sync-status" class="synced"><div class="sync-dot"></div> <span id="sync-text">Local Only</span></div>
+      <div id="sync-status" class="synced"><div class="sync-dot"></div><span id="sync-text">Local Only</span></div>
       <button class="ghost" id="btnPrint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>Print</button>
       <button class="ghost" id="btnReset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>Reset</button>
       <button class="ghost" id="btnTheme" aria-label="Toggle dark mode"><svg id="icoMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg><svg id="icoSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
@@ -346,501 +272,444 @@ footer b{color:var(--ink)}
     <button class="tab" data-panel="panel-materials"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 8 12 3 3 8v8l9 5 9-5ZM3 8l9 5 9-5M12 13v8"/></svg>② Materials &amp; labour <b id="tb-opex">—</b></button>
     <button class="tab" data-panel="panel-model"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 20V9m6 11V4m6 16v-8m4 8H2"/></svg>③ Financial model <b id="tb-net">—</b></button>
     <button class="tab" data-panel="panel-recipes"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9 2 2 4-4"/></svg>④ Recipes &amp; costing</button>
+    <button class="tab" data-panel="panel-pnl"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 17V7m0 10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m0 10a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 7a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m0 10V7m0 10a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2"/></svg>⑤ Profit &amp; Loss</button>
   </nav>
 </div>
 
 <main>
-  <!-- ① EQUIPMENT -->
   <section id="panel-equipment" class="panel active">
     <div class="cards">
       <div class="card review">
-        <div class="card-head">
-          <div><span class="eyebrow">Cost control</span><h2>Setup cost review</h2></div>
-          <div class="seg" role="group" aria-label="Investment view">
-            <button id="btn-full">Full setup</button><button id="btn-lean">Lean — skip ⚑</button>
-          </div>
-        </div>
+        <div class="card-head"><div><span class="eyebrow">Cost control</span><h2>Setup cost review</h2></div><div class="seg" role="group" aria-label="Investment view"><button id="btn-full">Full setup</button><button id="btn-lean">Lean — skip ⚑</button></div></div>
         <div class="krow"><span>Full setup (everything listed below)</span><b id="rv-full">—</b></div>
         <div class="krow"><span>Flagged ⚑ — unnecessary at launch / can defer</span><b id="rv-flag">—</b></div>
         <div class="krow big"><span>Lean setup</span><b id="rv-lean" style="color:var(--amber)">—</b></div>
-        <p class="hint" style="text-align:left;max-width:none;margin-top:8px">
-          Tap the ⚑ on any row to flag or un-flag it as deferrable. The chosen view drives the investment, payback and ticker numbers.
-          Biggest levers: rent advance (negotiate months down), freezer &amp; dough mixer (defer), seating (launch delivery-first).
-        </p>
+        <p class="hint" style="text-align:left;max-width:none;margin-top:8px">Tap the ⚑ on any row to flag or un-flag it as deferrable. The chosen view drives the investment, payback and ticker numbers. Biggest levers: rent advance (negotiate months down), freezer &amp; dough mixer (defer), seating (launch delivery-first).</p>
       </div>
-      <div class="card">
-        <div class="card-head">
-          <div><span class="eyebrow">One-off capital</span><h2>Kitchen equipment</h2></div>
-          <p class="hint">Adjusted 2026 estimates for a Lahore-style fit-out. Edit quantities and unit prices — totals recalculate instantly.</p>
-        </div>
-        <div id="tbl-kitchen"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div><span class="eyebrow">One-off capital</span><h2>Fit-out &amp; front of house</h2></div></div>
-        <div id="tbl-fitout"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div><span class="eyebrow">Before opening day</span><h2>Pre-opening &amp; licences</h2></div></div>
-        <div id="tbl-preopen"></div>
-      </div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">One-off capital</span><h2>Kitchen equipment</h2></div><p class="hint">Quote-based estimates for a Lahore-style fit-out. Edit quantities and unit prices — totals recalculate instantly.</p></div><div id="tbl-kitchen"></div></div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">One-off capital</span><h2>Fit-out &amp; front of house</h2></div></div><div id="tbl-fitout"></div></div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">Before opening day</span><h2>Pre-opening &amp; licences</h2></div></div><div id="tbl-preopen"></div></div>
     </div>
   </section>
 
-  <!-- ② MATERIALS & LABOUR -->
   <section id="panel-materials" class="panel">
     <div class="trio">
-      <div class="card">
-        <div class="card-head"><div><span class="eyebrow">One-off</span><h2>Opening stock — raw materials</h2></div></div>
-        <div id="tbl-materials"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div><span class="eyebrow">Monthly</span><h2>Labour</h2></div>
-          <p class="hint" style="text-align:left;max-width:none">Pay ranges from WageIndicator (cooks &amp; minimum wage).</p></div>
-        <div id="tbl-labor"></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div><span class="eyebrow">Monthly</span><h2>Rent, utilities &amp; overheads</h2></div></div>
-        <div id="tbl-overhead"></div>
-      </div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">One-off</span><h2>Opening stock — raw materials</h2></div><p class="hint" style="text-align:left;max-width:none">⚡ Changing a material price here <b>automatically updates</b> all linked recipes in Tab ④.</p></div><div id="tbl-materials"></div></div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">Monthly</span><h2>Labour</h2></div><p class="hint" style="text-align:left;max-width:none">Pay ranges from WageIndicator (cooks &amp; minimum wage).</p></div><div id="tbl-labor"></div></div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">Monthly</span><h2>Rent, utilities &amp; overheads</h2></div></div><div id="tbl-overhead"></div></div>
     </div>
   </section>
 
-  <!-- ③ FINANCIAL MODEL -->
   <section id="panel-model" class="panel">
     <div class="model-grid">
-      <div class="card">
-        <div class="card-head">
-          <div><span class="eyebrow">Sales menu</span><h2>Products &amp; stations <span class="tag-new">☕ CHAI ADDED</span></h2></div>
-          <p class="hint">Flip stations on/off, edit any number. <b>Unit cost is auto-calculated</b> from the ④ Recipes tab.</p>
-        </div>
-        <div id="tbl-products"></div>
-      </div>
+      <div class="card"><div class="card-head"><div><span class="eyebrow">Sales menu</span><h2>Products &amp; stations <span class="tag-new">☕ CHAI ADDED</span></h2></div><p class="hint">Flip stations on/off, edit any number, add your own items — every total recalculates live. Use <b>Daily</b> or <b>Monthly</b> mode for units.</p></div><div id="tbl-products"></div></div>
       <div class="rail">
-        <div class="card">
-          <h3>Assumptions</h3>
-          <label class="field"><span>Open days / month</span><input id="in-days" type="number" min="1" max="31" step="1"></label>
-          <label class="field"><span>Cash buffer (months of opex)</span><input id="in-buffer" type="number" min="0" step="0.5"></label>
-        </div>
-        <div class="card">
-          <h3>Monthly model</h3>
-          <div class="krow"><span>Revenue</span><b id="r-mrev">—</b></div>
-          <div class="krow"><span>Food cost</span><b id="r-mfood">—</b></div>
-          <div class="krow"><span>Gross profit <span class="chip" id="r-gmargin">—</span></span><b id="r-gross">—</b></div>
-          <div class="krow"><span>Operating overheads</span><b id="r-opex">—</b></div>
-          <div class="krow big"><span>Net profit<span class="chip" id="r-nem">—</span></span><b id="r-net">—</b></div>
-          <div class="bar" aria-hidden="true"><i id="bar-food"></i><i id="bar-opex"></i><i id="bar-net"></i></div>
-          <div class="legend">
-            <span><i class="dot" style="background:var(--amber)"></i>Food cost <b id="lg-food">—</b></span>
-            <span><i class="dot" style="background:#7a8a97"></i>Overheads <b id="lg-opex">—</b></span>
-            <span><i class="dot" style="background:var(--money)"></i>Profit <b id="lg-net">—</b></span>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Break-even &amp; payback</h3>
-          <div class="krow"><span>Daily sales needed</span><b id="be-daily">—</b></div>
-          <div class="krow"><span>≈ orders per day</span><b id="be-orders">—</b></div>
-          <div class="krow"><span>Average ticket</span><b id="avg-ticket">—</b></div>
-          <div style="height:8px"></div>
-          <div class="krow"><span>Setup &amp; fit-out <span class="chip" id="inv-view">lean</span></span><b id="inv-setup">—</b></div>
-          <div class="krow"><span>Opening stock</span><b id="inv-mat">—</b></div>
-          <div class="krow"><span>Cash buffer</span><b id="inv-buf">—</b></div>
-          <div class="krow"><span><b>Total investment</b></span><b id="inv-total">—</b></div>
-          <div class="callout">Investment recovered in <b id="pb-val">—</b> at current net profit.</div>
-        </div>
+        <div class="card"><h3>Assumptions</h3><label class="field"><span>Open days / month</span><input id="in-days" type="number" min="1" max="31" step="1"></label><label class="field"><span>Cash buffer (months of opex)</span><input id="in-buffer" type="number" min="0" step="0.5"></label></div>
+        <div class="card"><h3>Monthly model</h3><div class="krow"><span>Revenue</span><b id="r-mrev">—</b></div><div class="krow"><span>Food cost</span><b id="r-mfood">—</b></div><div class="krow"><span>Gross profit <span class="chip" id="r-gmargin">—</span></span><b id="r-gross">—</b></div><div class="krow"><span>Operating overheads</span><b id="r-opex">—</b></div><div class="krow big"><span>Net profit<span class="chip" id="r-nem">—</span></span><b id="r-net">—</b></div><div class="bar" aria-hidden="true"><i id="bar-food"></i><i id="bar-opex"></i><i id="bar-net"></i></div><div class="legend"><span><i class="dot" style="background:var(--amber)"></i>Food cost <b id="lg-food">—</b></span><span><i class="dot" style="background:#7a8a97"></i>Overheads <b id="lg-opex">—</b></span><span><i class="dot" style="background:var(--money)"></i>Profit <b id="lg-net">—</b></span></div></div>
+        <div class="card"><h3>Break-even &amp; payback</h3><div class="krow"><span>Daily sales needed</span><b id="be-daily">—</b></div><div class="krow"><span>≈ orders per day</span><b id="be-orders">—</b></div><div class="krow"><span>Average ticket</span><b id="avg-ticket">—</b></div><div style="height:8px"></div><div class="krow"><span>Setup &amp; fit-out <span class="chip" id="inv-view">lean</span></span><b id="inv-setup">—</b></div><div class="krow"><span>Opening stock</span><b id="inv-mat">—</b></div><div class="krow"><span>Cash buffer</span><b id="inv-buf">—</b></div><div class="krow"><span><b>Total investment</b></span><b id="inv-total">—</b></div><div class="callout">Investment recovered in <b id="pb-val">—</b> at current net profit.</div></div>
       </div>
     </div>
   </section>
 
-  <!-- ④ RECIPES & COSTING -->
   <section id="panel-recipes" class="panel">
     <div class="cards">
       <div class="card">
-        <div class="card-head">
-          <div><span class="eyebrow">Unit economics</span><h2>Recipe &amp; ingredient breakdown</h2></div>
-          <p class="hint">Each product has its own card below. Changes here <b>automatically sync</b> to the Financial Model tab and the cloud.</p>
-        </div>
+        <div class="card-head"><div><span class="eyebrow">Unit economics</span><h2>Recipe &amp; ingredient breakdown</h2></div><p class="hint">Each product has its own card. Link ingredients to Tab ② materials — costs update live when material prices change.</p></div>
+        <button class="btn-add" id="btn-add-product-recipe" style="margin-top:0; margin-bottom:16px; border-style:solid; background:var(--green-t); color:var(--green);">+ Add New Product &amp; Recipe</button>
         <div id="tbl-recipes"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-pnl" class="panel">
+    <div class="cards">
+      <div class="card">
+        <div class="card-head"><div><span class="eyebrow">Forecasting</span><h2>Detailed Profit &amp; Loss Statement</h2></div><p class="hint">Line items in rows, periods in columns. <b>Click any figure</b> to see quantities, rates and the full breakdown behind it.</p></div>
+        <div class="pnl-controls">
+          <div class="pnl-period-selector" role="group" aria-label="Period view">
+            <button class="pnl-period-btn active" data-period="day">Daily</button>
+            <button class="pnl-period-btn" data-period="week">Weekly</button>
+            <button class="pnl-period-btn" data-period="month">Monthly</button>
+            <button class="pnl-period-btn" data-period="year">Yearly</button>
+          </div>
+          <div class="pnl-field-inline"><label for="pnl-periods">Periods to show:</label><input id="pnl-periods" type="number" min="1" max="60" step="1" value="30"></div>
+        </div>
+        <div id="pnl-content"></div>
+        <div class="pnl-assumptions">
+          <h4>📈 Forecast Assumptions</h4>
+          <div class="pnl-grid">
+            <div class="pnl-field"><label>Volume growth per period (%)</label><input type="number" id="pnl-growth" value="0" step="0.5" min="-50" max="100"></div>
+            <div class="pnl-field"><label>Seasonality / demand factor (%)</label><input type="number" id="pnl-seasonality" value="100" step="5" min="0" max="300"></div>
+            <div class="pnl-field"><label>Selling price increase per period (%)</label><input type="number" id="pnl-price-increase" value="0" step="0.5" min="0" max="50"></div>
+            <div class="pnl-field"><label>Material cost inflation per period (%)</label><input type="number" id="pnl-material-inflation" value="0" step="0.5" min="0" max="50"></div>
+            <div class="pnl-field"><label>Extra fixed expenses per period (Rs)</label><input type="number" id="pnl-extra-expenses" value="0" step="1000" min="0"></div>
+            <div class="pnl-field"><label>Labour cost increase per period (%)</label><input type="number" id="pnl-labour-increase" value="0" step="0.5" min="0" max="50"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="fwrap">
-    <b>Sources used for these estimates:</b> Active Pakistani commercial kitchen suppliers 
-    (<a href="https://pakeeza.net/" target="_blank" rel="noopener">Pakeeza Commercial Kitchen</a>, 
-    <a href="https://mughalelectric.com/" target="_blank" rel="noopener">Mughal Electric</a>);
-    Pakistan Bureau of Statistics weekly Sensitive Price Indicator for food prices
-    (<a href="https://www.pbs.gov.pk/" target="_blank" rel="noopener">PBS Official Portal</a>);
-    WageIndicator Pakistan for labour pay ranges
-    (<a href="https://wageindicator.org/en-pk/work-in-pakistan/jobs-and-pay/cooks" target="_blank" rel="noopener">Cooks</a>,
-    <a href="https://wageindicator.org/en-pk/work-in-pakistan/minimum-wage" target="_blank" rel="noopener">Minimum Wage</a>).
-    Equipment prices not tracked by PBS or WageIndicator are estimated from local market research, since Pakistan's commercial kitchen equipment trade is mostly informal and quote-based.
-    <b>Treat every number here as a planning starting point, not a fixed quote — confirm with your own suppliers before committing money.</b>
+<div id="pnl-modal" class="pnl-modal" hidden role="dialog" aria-modal="true">
+  <div class="pnl-modal-card">
+    <div class="pnl-modal-head">
+      <div><span class="eyebrow" id="pnl-modal-eyebrow">Detail</span><h3 id="pnl-modal-title">—</h3></div>
+      <button class="pnl-modal-close" id="pnl-modal-close" aria-label="Close">✕</button>
+    </div>
+    <div id="pnl-modal-body" class="pnl-modal-body"></div>
   </div>
-</footer>
+</div>
+
+<footer><div class="fwrap"><b>Sources used for these estimates:</b> Active Pakistani commercial kitchen suppliers (<a href="https://pakeeza.net/" target="_blank" rel="noopener">Pakeeza Commercial Kitchen</a>, <a href="https://mughalelectric.com/" target="_blank" rel="noopener">Mughal Electric</a>); Pakistan Bureau of Statistics weekly Sensitive Price Indicator for food prices (<a href="https://www.pbs.gov.pk/" target="_blank" rel="noopener">PBS Official Portal</a>); WageIndicator Pakistan for labour pay ranges (<a href="https://wageindicator.org/en-pk/work-in-pakistan/jobs-and-pay/cooks" target="_blank" rel="noopener">Cooks</a>, <a href="https://wageindicator.org/en-pk/work-in-pakistan/minimum-wage" target="_blank" rel="noopener">Minimum Wage</a>). Equipment prices not tracked by PBS or WageIndicator are estimated from local market research, since Pakistan's commercial kitchen equipment trade is mostly informal and quote-based. <b>Treat every number here as a planning starting point, not a fixed quote — confirm with your own suppliers before committing money.</b></div></footer>
 
 <script>
-/* ================= CONFIGURATION ================= */
-const SYNC_URL = 'https://script.google.com/macros/s/AKfycbz3YmhHFwgiAETz-JtjLNtth8g8v9b6BRJR2JOHyozrTacYcRvIEuAHso_M3k14KhYYrA/exec'; 
-
-/* ================= state ================= */
+const SYNC_URL = 'https://script.google.com/macros/s/AKfycbz3YmhHFwgiAETz-JtjLNtth8g8v9b6BRJR2JOHyozrTacYcRvIEuAHso_M3k14KhYYrA/exec';
 const clone = o => JSON.parse(JSON.stringify(o));
 const DEFAULTS = {
   openDays: 26, bufferMonths: 2, lean: true,
-  kitchen: [
-    {name:"Gas pizza deck oven — 12″ trays", qty:1, price:85000},
-    {name:"Spiral dough mixer, 10-20 kg", qty:1, price:115000, opt:true, note:"Defer — hand-knead or buy ready dough until daily pizza volume justifies it."},
-    {name:"Pizza pans, peels & proofing trays (set)", qty:1, price:28000},
-    {name:"Gas flat-top griddle (burgers)", qty:1, price:68000},
-    {name:"Double-basket deep fryer (fries)", qty:1, price:42000},
-    {name:"Shawarma machine — gas, motor included", qty:1, price:42000},
-    {name:"Chai station — kettle, burner & flasks", qty:1, price:18000},
-    {name:"Exhaust hood, ducting & extraction fan", qty:1, price:105000},
-    {name:"Upright commercial refrigerator", qty:1, price:145000},
-    {name:"Chest freezer, 300-500 L", qty:1, price:128000, opt:true, note:"Defer — upright fridge + daily fresh buying covers the first weeks."},
-    {name:"Stainless-steel prep tables", qty:2, price:32000},
-    {name:"Two-compartment sink & wash area", qty:1, price:34000},
-    {name:"Gas piping, installation & cylinders", qty:1, price:45000},
-    {name:"Electrical work, wiring & breakers", qty:1, price:85000}
-  ],
-  fitout: [
-    {name:"Front counter & display", qty:1, price:140000},
-    {name:"Seating — tables & chairs (basic)", qty:1, price:75000, opt:true, note:"Defer if you launch delivery / takeaway first."},
-    {name:"Signage & branding", qty:1, price:45000, opt:true, note:"Trim — a painted board + social page works at launch."},
-    {name:"POS terminal, cash drawer & software", qty:1, price:35000, opt:true, note:"Defer — phone, notebook and a cash box work for week one."}
-  ],
-  preopen: [
-    {name:"Shop rent security advance (3 months)", qty:1, price:240000},
-    {name:"Trade licence & food authority registration", qty:1, price:35000},
-    {name:"Opening marketing push (flyers, social ads)", qty:1, price:25000}
-  ],
-  materials: [
-    {name:"Flour (maida), 25 kg bag", qty:6, price:3200}, {name:"Mozzarella cheese, per kg", qty:10, price:2300},
-    {name:"Pizza / tomato sauce, per kg", qty:10, price:550}, {name:"Chicken (shawarma & burgers), per kg", qty:40, price:620},
-    {name:"Burger buns, per piece", qty:300, price:45}, {name:"Potatoes (fries), per kg", qty:50, price:140},
-    {name:"Cooking oil, per litre", qty:40, price:480}, {name:"Tea leaves (patti), per kg", qty:5, price:1400},
-    {name:"Fresh milk, per litre", qty:60, price:240}, {name:"Sugar, per kg", qty:20, price:165},
-    {name:"Coffee / cappuccino mix, per kg", qty:5, price:2400}, {name:"Mayo, ketchup & shawarma sauces, per kg", qty:10, price:600},
-    {name:"Packaging — boxes, wraps, cups (stock)", qty:1, price:45000}, {name:"Cleaning & sundries", qty:1, price:8000}
-  ],
-  labor: [
-    {name:"Head cook (pizza & grill)", qty:1, price:60000}, {name:"Cook — burgers & fries", qty:1, price:45000},
-    {name:"Shawarma chef", qty:1, price:42000}, {name:"Chaiwala / tea barista", qty:1, price:28000},
-    {name:"Kitchen helper", qty:2, price:26000}, {name:"Cashier / order taker", qty:1, price:34000}, {name:"Cleaner / washer", qty:1, price:25000}
-  ],
-  overhead: [
-    {name:"Shop rent", qty:1, price:80000}, {name:"Electricity", qty:1, price:55000}, {name:"Gas", qty:1, price:28000},
-    {name:"Water & sewerage", qty:1, price:4000}, {name:"Internet & phone", qty:1, price:4000},
-    {name:"Marketing & delivery-app commission", qty:1, price:25000}, {name:"Generator / UPS fuel & upkeep", qty:1, price:10000}, {name:"Miscellaneous & contingency", qty:1, price:18000}
-  ],
-  products: [
-    {name:"Pizza — 12″", on:true, price:1350, units:24}, {name:"Burger (zinger style)", on:true, price:450, units:40},
-    {name:"Shawarma (chicken)", on:true, price:280, units:60}, {name:"Fries (regular / loaded)", on:true, price:260, units:35},
-    {name:"Doodh patti chai", on:true, price:120, units:80}, {name:"Green tea / kahwa", on:true, price:100, units:20}, {name:"Coffee / cappuccino", on:false, price:300, units:15}
-  ],
+  kitchen: [{name:"Gas pizza deck oven — 12″ trays", qty:1, price:85000},{name:"Spiral dough mixer, 10-20 kg", qty:1, price:115000, opt:true, note:"Defer — hand-knead or buy ready dough until daily pizza volume justifies it."},{name:"Pizza pans, peels & proofing trays (set)", qty:1, price:28000},{name:"Gas flat-top griddle (burgers)", qty:1, price:68000},{name:"Double-basket deep fryer (fries)", qty:1, price:42000},{name:"Shawarma machine — gas, motor included", qty:1, price:42000},{name:"Chai station — kettle, burner & flasks", qty:1, price:18000},{name:"Exhaust hood, ducting & extraction fan", qty:1, price:105000},{name:"Upright commercial refrigerator", qty:1, price:145000},{name:"Chest freezer, 300-500 L", qty:1, price:128000, opt:true, note:"Defer — upright fridge + daily fresh buying covers the first weeks."},{name:"Stainless-steel prep tables", qty:2, price:32000},{name:"Two-compartment sink & wash area", qty:1, price:34000},{name:"Gas piping, installation & cylinders", qty:1, price:45000},{name:"Electrical work, wiring & breakers", qty:1, price:85000}],
+  fitout: [{name:"Front counter & display", qty:1, price:140000},{name:"Seating — tables & chairs (basic)", qty:1, price:75000, opt:true, note:"Defer if you launch delivery / takeaway first."},{name:"Signage & branding", qty:1, price:45000, opt:true, note:"Trim — a painted board + social page works at launch."},{name:"POS terminal, cash drawer & software", qty:1, price:35000, opt:true, note:"Defer — phone, notebook and a cash box work for week one."}],
+  preopen: [{name:"Shop rent security advance (3 months)", qty:1, price:240000},{name:"Trade licence & food authority registration", qty:1, price:35000},{name:"Opening marketing push (flyers, social ads)", qty:1, price:25000}],
+  materials: [{name:"Flour (maida), 25 kg bag", qty:6, price:3200},{name:"Mozzarella cheese", qty:10, price:2300},{name:"Pizza / tomato sauce", qty:10, price:550},{name:"Chicken (shawarma & burgers)", qty:40, price:620},{name:"Burger buns", qty:300, price:45},{name:"Potatoes (fries)", qty:50, price:140},{name:"Cooking oil", qty:40, price:480},{name:"Tea leaves (patti)", qty:5, price:1400},{name:"Fresh milk", qty:60, price:240},{name:"Sugar", qty:20, price:165},{name:"Coffee / cappuccino mix", qty:5, price:2400},{name:"Mayo, ketchup & shawarma sauces", qty:10, price:600},{name:"Packaging — boxes, wraps, cups", qty:1, price:45000},{name:"Cleaning & sundries", qty:1, price:8000}],
+  labor: [{name:"Head cook (pizza & grill)", qty:1, price:60000},{name:"Cook — burgers & fries", qty:1, price:45000},{name:"Shawarma chef", qty:1, price:42000},{name:"Chaiwala / tea barista", qty:1, price:28000},{name:"Kitchen helper", qty:2, price:26000},{name:"Cashier / order taker", qty:1, price:34000},{name:"Cleaner / washer", qty:1, price:25000}],
+  overhead: [{name:"Shop rent", qty:1, price:80000, fixed:true},{name:"Electricity", qty:1, price:55000, fixed:false},{name:"Gas", qty:1, price:28000, fixed:false},{name:"Water & sewerage", qty:1, price:4000, fixed:false},{name:"Internet & phone", qty:1, price:4000, fixed:true},{name:"Marketing & delivery-app commission", qty:1, price:25000, fixed:false},{name:"Generator / UPS fuel & upkeep", qty:1, price:10000, fixed:false},{name:"Miscellaneous & contingency", qty:1, price:18000, fixed:false}],
+  products: [{name:"Pizza — 12″", on:true, price:1350, units:24, unitsMode:"daily"},{name:"Burger (zinger style)", on:true, price:450, units:40, unitsMode:"daily"},{name:"Shawarma (chicken)", on:true, price:280, units:60, unitsMode:"daily"},{name:"Fries (regular / loaded)", on:true, price:260, units:35, unitsMode:"daily"},{name:"Doodh patti chai", on:true, price:120, units:80, unitsMode:"daily"},{name:"Green tea / kahwa", on:true, price:100, units:20, unitsMode:"daily"},{name:"Coffee / cappuccino", on:false, price:300, units:15, unitsMode:"daily"}],
   recipes: [
-    {product:"Pizza — 12″", ingredient:"Flour (250g)", qty:1, cost:45}, {product:"Pizza — 12″", ingredient:"Mozzarella (150g)", qty:1, cost:345},
-    {product:"Pizza — 12″", ingredient:"Tomato sauce (50g)", qty:1, cost:28}, {product:"Pizza — 12″", ingredient:"Packaging box", qty:1, cost:122},
-    {product:"Burger (zinger style)", ingredient:"Burger bun", qty:1, cost:45}, {product:"Burger (zinger style)", ingredient:"Chicken patty & marinade", qty:1, cost:90},
-    {product:"Burger (zinger style)", ingredient:"Veggies, cheese & sauce", qty:1, cost:30}, {product:"Burger (zinger style)", ingredient:"Wrapper/Box", qty:1, cost:20},
-    {product:"Shawarma (chicken)", ingredient:"Shawarma bread", qty:1, cost:25}, {product:"Shawarma (chicken)", ingredient:"Chicken meat (80g)", qty:1, cost:50},
-    {product:"Shawarma (chicken)", ingredient:"Garlic sauce & veggies", qty:1, cost:25}, {product:"Shawarma (chicken)", ingredient:"Foil wrap", qty:1, cost:15},
-    {product:"Fries (regular / loaded)", ingredient:"Potatoes (200g)", qty:1, cost:28}, {product:"Fries (regular / loaded)", ingredient:"Cooking oil", qty:1, cost:25},
-    {product:"Fries (regular / loaded)", ingredient:"Salt & seasoning", qty:1, cost:7}, {product:"Fries (regular / loaded)", ingredient:"Paper cone/box", qty:1, cost:25},
-    {product:"Doodh patti chai", ingredient:"Tea leaves", qty:1, cost:5}, {product:"Doodh patti chai", ingredient:"Fresh milk", qty:1, cost:18},
-    {product:"Doodh patti chai", ingredient:"Sugar", qty:1, cost:2}, {product:"Doodh patti chai", ingredient:"Paper cup", qty:1, cost:10},
-    {product:"Green tea / kahwa", ingredient:"Green tea / kahwa mix", qty:1, cost:12}, {product:"Green tea / kahwa", ingredient:"Sugar / honey", qty:1, cost:5},
-    {product:"Green tea / kahwa", ingredient:"Paper cup", qty:1, cost:5}, {product:"Coffee / cappuccino", ingredient:"Coffee mix", qty:1, cost:60},
-    {product:"Coffee / cappuccino", ingredient:"Milk / creamer", qty:1, cost:30}, {product:"Coffee / cappuccino", ingredient:"Paper cup & lid", qty:1, cost:20}
-  ]
+    {product:"Pizza — 12″", ingredient:"Flour (250g)", qty:1, linkedMaterial:"Flour (maida), 25 kg bag", conversionFactor:0.0140625},
+    {product:"Pizza — 12″", ingredient:"Mozzarella (150g)", qty:1, linkedMaterial:"Mozzarella cheese", conversionFactor:0.15},
+    {product:"Pizza — 12″", ingredient:"Tomato sauce (50g)", qty:1, linkedMaterial:"Pizza / tomato sauce", conversionFactor:0.05090909},
+    {product:"Pizza — 12″", ingredient:"Packaging box", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00271111},
+    {product:"Burger (zinger style)", ingredient:"Burger bun", qty:1, linkedMaterial:"Burger buns", conversionFactor:1},
+    {product:"Burger (zinger style)", ingredient:"Chicken patty & marinade", qty:1, linkedMaterial:"Chicken (shawarma & burgers)", conversionFactor:0.14516129},
+    {product:"Burger (zinger style)", ingredient:"Veggies, cheese & sauce", qty:1, linkedMaterial:"Mayo, ketchup & shawarma sauces", conversionFactor:0.05},
+    {product:"Burger (zinger style)", ingredient:"Wrapper/Box", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00044444},
+    {product:"Shawarma (chicken)", ingredient:"Shawarma bread", qty:1, linkedMaterial:"Burger buns", conversionFactor:0.55555556},
+    {product:"Shawarma (chicken)", ingredient:"Chicken meat (80g)", qty:1, linkedMaterial:"Chicken (shawarma & burgers)", conversionFactor:0.08064516},
+    {product:"Shawarma (chicken)", ingredient:"Garlic sauce & veggies", qty:1, linkedMaterial:"Mayo, ketchup & shawarma sauces", conversionFactor:0.04166667},
+    {product:"Shawarma (chicken)", ingredient:"Foil wrap", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00033333},
+    {product:"Fries (regular / loaded)", ingredient:"Potatoes (200g)", qty:1, linkedMaterial:"Potatoes (fries)", conversionFactor:0.2},
+    {product:"Fries (regular / loaded)", ingredient:"Cooking oil", qty:1, linkedMaterial:"Cooking oil", conversionFactor:0.05208333},
+    {product:"Fries (regular / loaded)", ingredient:"Salt & seasoning", qty:1, linkedMaterial:"", conversionFactor:0, manualCost:7},
+    {product:"Fries (regular / loaded)", ingredient:"Paper cone/box", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00055556},
+    {product:"Doodh patti chai", ingredient:"Tea leaves", qty:1, linkedMaterial:"Tea leaves (patti)", conversionFactor:0.00357143},
+    {product:"Doodh patti chai", ingredient:"Fresh milk", qty:1, linkedMaterial:"Fresh milk", conversionFactor:0.075},
+    {product:"Doodh patti chai", ingredient:"Sugar", qty:1, linkedMaterial:"Sugar", conversionFactor:0.01212121},
+    {product:"Doodh patti chai", ingredient:"Paper cup", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00022222},
+    {product:"Green tea / kahwa", ingredient:"Green tea / kahwa mix", qty:1, linkedMaterial:"Coffee / cappuccino mix", conversionFactor:0.005},
+    {product:"Green tea / kahwa", ingredient:"Sugar / honey", qty:1, linkedMaterial:"Sugar", conversionFactor:0.03030303},
+    {product:"Green tea / kahwa", ingredient:"Paper cup", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00011111},
+    {product:"Coffee / cappuccino", ingredient:"Coffee mix", qty:1, linkedMaterial:"Coffee / cappuccino mix", conversionFactor:0.025},
+    {product:"Coffee / cappuccino", ingredient:"Milk / creamer", qty:1, linkedMaterial:"Fresh milk", conversionFactor:0.125},
+    {product:"Coffee / cappuccino", ingredient:"Paper cup & lid", qty:1, linkedMaterial:"Packaging — boxes, wraps, cups", conversionFactor:0.00044444}
+  ],
+  pnlAssumptions: {growth:0, seasonality:100, priceIncrease:0, materialInflation:0, extraExpenses:0, labourIncrease:0, periods:30, period:"day"}
 };
 
 let state = clone(DEFAULTS);
-let isSyncing = false;
-let saveTimeout;
+let isSyncing = false, saveTimeout;
 
-/* ================= helpers ================= */
 const $ = s => document.querySelector(s);
-const fmt = n => (n < 0 ? "−" : "") + "Rs " + Math.round(Math.abs(n)).toLocaleString("en-PK");
-function compact(n){
-  const s = n < 0 ? "−" : "", a = Math.abs(n);
-  if(a >= 1e7) return s + "₨ " + (a/1e7).toFixed(2) + " Cr";
-  if(a >= 1e5) return s + "₨ " + (a/1e5).toFixed(2) + " Lakh";
-  if(a >= 1e3) return s + "₨ " + (a/1e3).toFixed(1) + "k";
-  return s + "₨ " + Math.round(a);
-}
+const fmt = n => { if (n === null || n === undefined || isNaN(n)) return "—"; const sign = n < 0 ? "−" : ""; return sign + "Rs " + Math.round(Math.abs(n)).toLocaleString("en-PK"); };
+function compact(n){ if (n === null || n === undefined || isNaN(n)) return "—"; const s = n < 0 ? "−" : "", a = Math.abs(n); if(a >= 1e7) return s + "₨ " + (a/1e7).toFixed(2) + " Cr"; if(a >= 1e5) return s + "₨ " + (a/1e5).toFixed(2) + " Lakh"; if(a >= 1e3) return s + "₨ " + (a/1e3).toFixed(1) + "k"; return s + "₨ " + Math.round(a); }
 const val = e => Math.max(0, parseFloat(e.target.value) || 0);
 const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 
-function updateSyncStatus(status, text) {
-  const el = $('#sync-status');
-  const txt = $('#sync-text');
-  el.className = status;
-  txt.textContent = text;
-}
-
-/* ================= SYNC LOGIC ================= */
-function saveToLocalStorage() {
-  try { localStorage.setItem("rp_state_v8", JSON.stringify(state)); } catch(e){}
-}
-
+function updateSyncStatus(status, text) { const el = $('#sync-status'); const txt = $('#sync-text'); if (!el) return; el.className = status; txt.textContent = text; }
+function saveToLocalStorage() { try { localStorage.setItem("rp_state_v12", JSON.stringify(state)); } catch(e){} }
 async function syncFromCloud() {
-  if (!SYNC_URL || SYNC_URL.includes('PASTE_YOUR')) {
-    updateSyncStatus('offline', 'Local Only (No URL)');
-    return;
-  }
-  if (isSyncing || !navigator.onLine) {
-    updateSyncStatus(navigator.onLine ? 'synced' : 'offline', navigator.onLine ? 'Synced' : 'Offline');
-    return;
-  }
-  
-  isSyncing = true;
-  updateSyncStatus('saving', 'Syncing...');
-  
-  try {
-    const response = await fetch(SYNC_URL);
-    if (response.ok) {
-      const cloudData = await response.json();
-      if (cloudData && cloudData.products && cloudData.kitchen) {
-        state = Object.assign(clone(DEFAULTS), cloudData);
-        saveToLocalStorage();
-        renderAll();
-        recompute();
-        updateSyncStatus('synced', 'Synced');
-      } else {
-        updateSyncStatus('synced', 'Synced (Empty Cloud)');
-      }
-    }
-  } catch (error) {
-    console.error("Sync failed:", error);
-    updateSyncStatus('offline', 'Offline');
-  } finally {
-    isSyncing = false;
-  }
+  if (!SYNC_URL || SYNC_URL.includes('PASTE_YOUR')) { updateSyncStatus('offline', 'Local Only (No URL)'); return; }
+  if (isSyncing || !navigator.onLine) { updateSyncStatus(navigator.onLine ? 'synced' : 'offline', navigator.onLine ? 'Synced' : 'Offline'); return; }
+  isSyncing = true; updateSyncStatus('saving', 'Syncing...');
+  try { const response = await fetch(SYNC_URL); if (response.ok) { const cloudData = await response.json(); if (cloudData && cloudData.products && cloudData.kitchen) { state = Object.assign(clone(DEFAULTS), cloudData); migrateState(); saveToLocalStorage(); renderAll(); recompute(); updateSyncStatus('synced', 'Synced'); } else { updateSyncStatus('synced', 'Synced (Empty Cloud)'); } } } catch (error) { console.error("Sync failed:", error); updateSyncStatus('offline', 'Offline'); } finally { isSyncing = false; }
 }
-
 function syncToCloud() {
-  if (!SYNC_URL || SYNC_URL.includes('PASTE_YOUR') || !navigator.onLine) {
-    updateSyncStatus(navigator.onLine ? 'synced' : 'offline', navigator.onLine ? 'Local Saved' : 'Offline');
-    return;
-  }
-  
+  if (!SYNC_URL || SYNC_URL.includes('PASTE_YOUR') || !navigator.onLine) { updateSyncStatus(navigator.onLine ? 'synced' : 'offline', navigator.onLine ? 'Local Saved' : 'Offline'); return; }
   updateSyncStatus('saving', 'Saving...');
-  
-  fetch(SYNC_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(state)
-  }).then(() => {
-    updateSyncStatus('synced', 'Synced');
-  }).catch(() => {
-    updateSyncStatus('offline', 'Offline');
+  fetch(SYNC_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(state) }).then(() => { updateSyncStatus('synced', 'Synced'); }).catch(() => { updateSyncStatus('offline', 'Offline'); });
+}
+function debouncedSave() { saveToLocalStorage(); clearTimeout(saveTimeout); saveTimeout = setTimeout(() => { syncToCloud(); }, 1500); }
+window.addEventListener('online', () => { updateSyncStatus('saving', 'Reconnecting...'); syncToCloud(); });
+window.addEventListener('offline', () => { updateSyncStatus('offline', 'Offline'); });
+function setCell(id, txt){ const el = document.getElementById(id); if(!el) return; if(el.textContent !== txt){ el.textContent = txt; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); } }
+
+function migrateState() {
+  if (!state.pnlAssumptions) state.pnlAssumptions = clone(DEFAULTS.pnlAssumptions);
+  state.recipes.forEach(r => {
+    if (r.conversionFactor === undefined) r.conversionFactor = 0;
+    if (r.linkedMaterial === undefined) r.linkedMaterial = "";
+    if (r.cost !== undefined && r.conversionFactor === 0 && r.linkedMaterial) {
+      const mat = state.materials.find(m => m.name === r.linkedMaterial);
+      if (mat && mat.price > 0) r.conversionFactor = r.cost / mat.price;
+    }
   });
+  state.products.forEach(p => { if (!p.unitsMode) p.unitsMode = "daily"; });
+  state.overhead.forEach(o => { if (o.fixed === undefined) o.fixed = false; });
 }
 
-function debouncedSave() {
-  saveToLocalStorage();
-  clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(() => {
-    syncToCloud();
-  }, 1500);
+function getIngredientCost(r) {
+  if (r.linkedMaterial) {
+    const mat = state.materials.find(m => m.name === r.linkedMaterial);
+    if (mat) return mat.price * (r.conversionFactor || 0);
+  }
+  return r.manualCost || r.cost || 0;
 }
 
-window.addEventListener('online', () => {
-  updateSyncStatus('saving', 'Reconnecting...');
-  syncToCloud();
-});
-window.addEventListener('offline', () => {
-  updateSyncStatus('offline', 'Offline');
-});
-
-function setCell(id, txt){
-  const el = document.getElementById(id); if(!el) return;
-  if(el.textContent !== txt){ el.textContent = txt; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
-}
-
-/* ================= pair tables (qty × rate) ================= */
-const PAIR_COLS = {
-  kitchen:  {item:"Equipment item", qty:"Qty", rate:"Unit price (Rs)"},
-  fitout:   {item:"Item", qty:"Qty", rate:"Unit price (Rs)"},
-  preopen:  {item:"Item", qty:"Qty", rate:"Amount (Rs)"},
-  materials:{item:"Raw material / packaging", qty:"Qty", rate:"Rate (Rs)"},
-  labor:    {item:"Role", qty:"Staff", rate:"Monthly pay (Rs)"},
-  overhead: {item:"Expense", qty:"Qty", rate:"Monthly cost (Rs)"}
-};
+const PAIR_COLS = { kitchen:{item:"Equipment item", qty:"Qty", rate:"Unit price (Rs)"}, fitout:{item:"Item", qty:"Qty", rate:"Unit price (Rs)"}, preopen:{item:"Item", qty:"Qty", rate:"Amount (Rs)"}, materials:{item:"Raw material / packaging", qty:"Qty", rate:"Rate (Rs)"}, labor:{item:"Role", qty:"Staff", rate:"Monthly pay (Rs)"}, overhead:{item:"Expense", qty:"Qty", rate:"Monthly cost (Rs)"} };
 const FLAG_KEYS = ["kitchen","fitout","preopen"];
 
 function renderPairs(key){
   const cols = PAIR_COLS[key], hasFlag = FLAG_KEYS.includes(key);
-  const mount = document.getElementById("tbl-" + key);
+  const mount = document.getElementById("tbl-" + key); if (!mount) return;
   mount.innerHTML = "";
   const wrap = document.createElement("div"); wrap.className = "tbl-wrap";
   const table = document.createElement("table"); table.className = "grid";
-  table.innerHTML = `<thead><tr><th>${cols.item}</th><th class="num">${cols.qty}</th><th class="num">${cols.rate}</th><th class="num">Total</th>${hasFlag ? '<th class="flagcell" title="Flag as unnecessary at launch / can defer"></th>' : ""}<th></th></tr></thead>`;
+  table.innerHTML = `<thead><tr><th>${cols.item}</th><th class="num">${cols.qty}</th><th class="num">${cols.rate}</th><th class="num">Total</th>${hasFlag ? '<th class="flagcell" title="Flag as deferrable">⚑</th>' : ""}<th></th></tr></thead>`;
   const tb = document.createElement("tbody");
   state[key].forEach((r, i) => {
-    const tr = document.createElement("tr");
-    tr.className = r.opt ? "flagged" : "";
-    tr.innerHTML =
-      `<td><input class="txt" type="text" value="${esc(r.name)}" placeholder="Item name" aria-label="Item name">` +
-        (r.opt && r.note ? `<div class="flagnote">⚑ ${esc(r.note)}</div>` : "") + `</td>` +
-      `<td class="num"><input type="number" min="0" step="1" value="${r.qty}" aria-label="${cols.qty}"></td>` +
-      `<td class="num"><input type="number" min="0" step="50" value="${r.price}" aria-label="${cols.rate}"></td>` +
-      `<td class="num total" data-tot="${key}">—</td>` +
-      (hasFlag ? `<td class="flagcell"><button class="flag ${r.opt ? "on" : ""}" title="Flag as unnecessary at launch / can defer">⚑</button></td>` : "") +
-      `<td class="delcell"><button class="del" title="Remove row">✕</button></td>`;
+    const tr = document.createElement("tr"); tr.className = r.opt ? "flagged" : "";
+    tr.innerHTML = `<td><input class="txt" type="text" value="${esc(r.name)}" placeholder="Item name"></td><td class="num"><input type="number" min="0" step="1" value="${r.qty}"></td><td class="num"><input type="number" min="0" step="50" value="${r.price}"></td><td class="num total" data-tot="${key}">—</td>${hasFlag ? `<td class="flagcell"><button class="flag ${r.opt ? "on" : ""}" title="Flag as deferrable">⚑</button></td>` : ""}<td class="delcell"><button class="del" title="Remove row">✕</button></td>`;
     const inputs = tr.querySelectorAll("input");
     inputs[0].oninput = e => { r.name = e.target.value; debouncedSave(); };
     inputs[1].oninput = e => { r.qty = val(e); debouncedSave(); recompute(); };
     inputs[2].oninput = e => { r.price = val(e); debouncedSave(); recompute(); };
-    if(hasFlag){
-      tr.querySelector(".flag").onclick = () => {
-        r.opt = !r.opt;
-        if(r.opt && !r.note) r.note = "Marked optional — review before spending.";
-        renderPairs(key); debouncedSave(); recompute();
-      };
-    }
+    if(hasFlag){ tr.querySelector(".flag").onclick = () => { r.opt = !r.opt; if(r.opt && !r.note) r.note = "Marked optional — review before spending."; renderPairs(key); debouncedSave(); recompute(); }; }
     tr.querySelector(".del").onclick = () => { state[key].splice(i,1); renderPairs(key); debouncedSave(); recompute(); };
     tb.appendChild(tr);
   });
   table.appendChild(tb);
-  const tf = document.createElement("tfoot");
-  tf.innerHTML = `<tr><td colspan="3">Subtotal</td><td class="num total" id="sub-${key}">—</td>${hasFlag ? "<td></td>" : ""}<td></td></tr>`;
-  table.appendChild(tf);
-  wrap.appendChild(table); mount.appendChild(wrap);
-  const btn = document.createElement("button");
-  btn.className = "btn-add"; btn.textContent = "+ Add item";
-  btn.onclick = () => {
-    state[key].push({name:"", qty:1, price:0});
-    renderPairs(key); debouncedSave(); recompute();
-    const names = mount.querySelectorAll("input.txt"); names[names.length-1].focus();
-  };
+  const tf = document.createElement("tfoot"); tf.innerHTML = `<tr><td colspan="3">Subtotal</td><td class="num total" id="sub-${key}">—</td>${hasFlag ? "<td></td>" : ""}<td></td></tr>`;
+  table.appendChild(tf); wrap.appendChild(table); mount.appendChild(wrap);
+  const btn = document.createElement("button"); btn.className = "btn-add"; btn.textContent = "+ Add item";
+  btn.onclick = () => { state[key].push({name:"", qty:1, price:0}); renderPairs(key); debouncedSave(); recompute(); };
   mount.appendChild(btn);
 }
 
-/* ================= products table ================= */
 function renderProducts(){
-  const mount = document.getElementById("tbl-products");
+  const mount = document.getElementById("tbl-products"); if (!mount) return;
   mount.innerHTML = "";
   const wrap = document.createElement("div"); wrap.className = "tbl-wrap";
   const table = document.createElement("table"); table.className = "grid";
-  table.innerHTML = `<thead><tr><th>On</th><th>Product / station</th><th class="num">Price (Rs)</th><th class="num">Units/day</th><th class="num">Recipe Cost (Rs)</th><th class="num">Daily sales</th><th class="num">Monthly profit</th><th></th></tr></thead>`;
+  table.innerHTML = `<thead><tr><th>On</th><th>Product / station</th><th class="num">Price (Rs)</th><th class="num">Units</th><th class="num mode-cell">Mode</th><th class="num">Recipe Cost</th><th class="num">Daily sales</th><th class="num">Monthly profit</th><th></th></tr></thead>`;
   const tb = document.createElement("tbody");
   state.products.forEach((p, i) => {
-    const tr = document.createElement("tr");
-    tr.className = "prow" + (p.on ? "" : " off");
-    tr.innerHTML =
-      `<td><input type="checkbox" class="sw" ${p.on ? "checked" : ""} aria-label="Station on/off"></td>` +
-      `<td><input class="txt" type="text" value="${esc(p.name)}" placeholder="Product name"></td>` +
-      `<td class="num"><input type="number" min="0" step="10" value="${p.price}"></td>` +
-      `<td class="num"><input type="number" min="0" step="1" value="${p.units}"></td>` +
-      `<td class="num" id="pc-${i}" style="color:var(--muted); font-size:13px">—</td>` +
-      `<td class="num total" id="pd-${i}">—</td>` +
-      `<td class="num total" id="pm-${i}" style="color:var(--money)">—</td>` +
-      `<td class="delcell"><button class="del" title="Remove product">✕</button></td>`;
-    const inputs = tr.querySelectorAll("input");
+    const tr = document.createElement("tr"); tr.className = "prow" + (p.on ? "" : " off");
+    tr.innerHTML = `<td><input type="checkbox" class="sw" ${p.on ? "checked" : ""}></td><td><input class="txt" type="text" value="${esc(p.name)}" placeholder="Product name"></td><td class="num"><input type="number" min="0" step="10" value="${p.price}"></td><td class="num"><input type="number" min="0" step="1" value="${p.units}"></td><td class="num mode-cell"><select class="txt" style="min-width:70px"><option value="daily" ${p.unitsMode==='daily'?'selected':''}>Daily</option><option value="monthly" ${p.unitsMode==='monthly'?'selected':''}>Monthly</option></select></td><td class="num" id="pc-${i}" style="color:var(--muted); font-size:13px">—</td><td class="num total" id="pd-${i}">—</td><td class="num total" id="pm-${i}" style="color:var(--money)">—</td><td class="delcell"><button class="del" title="Remove product">✕</button></td>`;
+    const inputs = tr.querySelectorAll("input, select");
     inputs[0].onchange = e => { p.on = e.target.checked; tr.classList.toggle("off", !p.on); debouncedSave(); recompute(); };
-    inputs[1].oninput  = e => { 
-        const oldName = p.name; p.name = e.target.value; 
-        state.recipes.forEach(r => { if(r.product === oldName) r.product = p.name; });
-        debouncedSave(); recompute(); 
-    };
-    inputs[2].oninput  = e => { p.price = val(e); debouncedSave(); recompute(); };
-    inputs[3].oninput  = e => { p.units = val(e); debouncedSave(); recompute(); };
-    tr.querySelector(".del").onclick = () => { 
-        const deletedName = p.name; state.products.splice(i,1); 
-        state.recipes = state.recipes.filter(r => r.product !== deletedName);
-        renderProducts(); renderRecipes(); debouncedSave(); recompute(); 
-    };
+    inputs[1].oninput = e => { const oldName = p.name; p.name = e.target.value; state.recipes.forEach(r => { if(r.product === oldName) r.product = p.name; }); debouncedSave(); recompute(); };
+    inputs[2].oninput = e => { p.price = val(e); debouncedSave(); recompute(); };
+    inputs[3].oninput = e => { p.units = val(e); debouncedSave(); recompute(); };
+    inputs[4].onchange = e => { p.unitsMode = e.target.value; debouncedSave(); recompute(); };
+    tr.querySelector(".del").onclick = () => { const deletedName = p.name; state.products.splice(i,1); state.recipes = state.recipes.filter(r => r.product !== deletedName); renderProducts(); renderRecipes(); debouncedSave(); recompute(); };
     tb.appendChild(tr);
   });
   table.appendChild(tb);
-  const tf = document.createElement("tfoot");
-  tf.innerHTML = `<tr><td colspan="4">Totals — active stations only</td><td></td><td class="num total" id="pd-total">—</td><td class="num total" id="pm-total" style="color:var(--money)">—</td><td></td></tr>`;
-  table.appendChild(tf);
-  wrap.appendChild(table); mount.appendChild(wrap);
-  const btn = document.createElement("button");
-  btn.className = "btn-add"; btn.textContent = "+ Add product";
-  btn.onclick = () => {
-    state.products.push({name:"New item", on:true, price:250, units:20});
-    renderProducts(); renderRecipes(); debouncedSave(); recompute();
-    const names = mount.querySelectorAll("input.txt"); names[names.length-1].focus();
-  };
+  const tf = document.createElement("tfoot"); tf.innerHTML = `<tr><td colspan="5">Totals — active stations only</td><td></td><td class="num total" id="pd-total">—</td><td class="num total" id="pm-total" style="color:var(--money)">—</td><td></td></tr>`;
+  table.appendChild(tf); wrap.appendChild(table); mount.appendChild(wrap);
+  const btn = document.createElement("button"); btn.className = "btn-add"; btn.textContent = "+ Add product";
+  btn.onclick = () => { state.products.push({name:"New item", on:true, price:250, units:20, unitsMode:"daily"}); renderProducts(); renderRecipes(); debouncedSave(); recompute(); };
   mount.appendChild(btn);
 }
 
-/* ================= recipes table ================= */
 function renderRecipes(){
-  const mount = document.getElementById("tbl-recipes");
+  const mount = document.getElementById("tbl-recipes"); if (!mount) return;
   mount.innerHTML = "";
-  if (state.products.length === 0) {
-    mount.innerHTML = `<div class="card"><p class="hint">Add products in the 'Sales menu' tab first to start building recipes.</p></div>`;
-    return;
-  }
-  const wrap = document.createElement("div"); wrap.className = "cards"; 
+  if (state.products.length === 0) { mount.innerHTML = `<p class="hint">Add products using the button above to start building recipes.</p>`; return; }
+  const wrap = document.createElement("div"); wrap.className = "cards";
   state.products.forEach((p, pIdx) => {
     const card = document.createElement("div"); card.className = "card";
     const ingredients = state.recipes.filter(r => r.product === p.name);
-    let totalCost = 0;
-    ingredients.forEach(r => totalCost += (+r.qty||0)*(+r.cost||0));
+    let totalCost = 0; ingredients.forEach(r => totalCost += getIngredientCost(r) * (+r.qty||0));
     const margin = p.price > 0 ? ((p.price - totalCost) / p.price * 100) : 0;
-    let marginClass = "margin-good";
-    if(margin < 30) marginClass = "margin-bad";
-    else if(margin < 50) marginClass = "margin-low";
-
-    card.innerHTML = `
-      <div class="card-head">
-        <div><span class="eyebrow">Recipe</span><h2 id="rhead-${pIdx}">${esc(p.name)}</h2></div>
-        <div class="hint" style="text-align:right">
-          Selling Price: <input type="number" class="recipe-price-input" value="${p.price}" min="0" step="10" id="rprice-${pIdx}">
-          <span class="sync-indicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15-6.7M20 15a9 9 0 0 1-15 6.7"/></svg> syncs to Financial Model</span><br>
-          Unit Cost: <b style="color:var(--amber)" id="pcost-${pIdx}">${fmt(totalCost)}</b> 
-          <span class="chip ${marginClass}" id="pmargin-${pIdx}">${margin.toFixed(0)}% margin</span>
-        </div>
-      </div>
-      <div class="tbl-wrap">
-        <table class="grid">
-          <thead><tr><th>Ingredient</th><th class="num">Qty / Portion</th><th class="num">Unit Cost (Rs)</th><th class="num">Line Total</th><th></th></tr></thead>
-          <tbody></tbody>
-          <tfoot><tr><td colspan="3">Total Recipe Cost</td><td class="num total" id="rtotal-${pIdx}" style="color:var(--amber)">${fmt(totalCost)}</td><td></td></tr></tfoot>
-        </table>
-      </div>
-    `;
+    let marginClass = "margin-good"; if(margin < 30) marginClass = "margin-bad"; else if(margin < 50) marginClass = "margin-low";
+    let materialOptions = state.materials.map(m => `<option value="${esc(m.name)}">${esc(m.name)}</option>`).join('');
+    card.innerHTML = `<div class="card-head"><div><span class="eyebrow">Recipe</span><h2 id="rhead-${pIdx}">${esc(p.name)}</h2></div><div class="hint" style="text-align:right">Selling Price: <input type="number" class="recipe-price-input" value="${p.price}" min="0" step="10" id="rprice-${pIdx}"><span class="sync-indicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0 1 15-6.7M20 15a9 9 0 0 1-15 6.7"/></svg> syncs to Financial Model</span><br>Unit Cost: <b style="color:var(--amber)" id="pcost-${pIdx}">${fmt(totalCost)}</b><span class="chip ${marginClass}" id="pmargin-${pIdx}">${margin.toFixed(0)}% margin</span></div></div><div class="tbl-wrap"><table class="grid"><thead><tr><th>Ingredient</th><th class="num">Qty</th><th>Linked Material</th><th class="num">Factor</th><th class="num">Unit Cost (Rs)</th><th class="num">Line Total</th><th></th></tr></thead><tbody></tbody><tfoot><tr><td colspan="5">Total Recipe Cost</td><td class="num total" id="rtotal-${pIdx}" style="color:var(--amber)">${fmt(totalCost)}</td><td></td></tr></tfoot></table></div>`;
     const tbody = card.querySelector("tbody");
     ingredients.forEach((r) => {
-        const actualIdx = state.recipes.indexOf(r);
-        const tr = document.createElement("tr");
-        const lineTotal = (+r.qty||0) * (+r.cost||0);
-        tr.innerHTML = `
-          <td><input class="txt" type="text" value="${esc(r.ingredient)}" placeholder="e.g., Flour 250g"></td>
-          <td class="num"><input type="number" min="0" step="0.1" value="${r.qty}"></td>
-          <td class="num"><input type="number" min="0" step="1" value="${r.cost}"></td>
-          <td class="num total" id="rline-${actualIdx}">${fmt(lineTotal)}</td>
-          <td class="delcell"><button class="del" title="Remove">✕</button></td>
-        `;
-        const inputs = tr.querySelectorAll("input");
-        inputs[0].oninput = e => { r.ingredient = e.target.value; debouncedSave(); };
-        inputs[1].oninput = e => { r.qty = val(e); debouncedSave(); recompute(); };
-        inputs[2].oninput = e => { r.cost = val(e); debouncedSave(); recompute(); };
-        tr.querySelector(".del").onclick = () => { state.recipes.splice(actualIdx, 1); debouncedSave(); renderRecipes(); recompute(); };
-        tbody.appendChild(tr);
+      const actualIdx = state.recipes.indexOf(r); const tr = document.createElement("tr");
+      const unitCost = getIngredientCost(r);
+      const lineTotal = unitCost * (+r.qty||0);
+      const isLinked = !!r.linkedMaterial;
+      const selectedOpt = isLinked ? materialOptions.replace(`value="${esc(r.linkedMaterial)}">`, `value="${esc(r.linkedMaterial)}" selected>`) : materialOptions;
+      tr.innerHTML = `<td><input class="txt" type="text" value="${esc(r.ingredient)}" placeholder="e.g., Flour 250g"></td><td class="num"><input type="number" min="0" step="0.1" value="${r.qty}"></td><td><select class="txt mat-select" style="min-width:130px"><option value="">— None (manual) —</option>${selectedOpt}</select></td><td class="num"><input type="number" id="rfactor-${actualIdx}" min="0" step="0.0001" value="${r.conversionFactor || 0}" style="width:80px"></td><td class="num"><input type="number" id="rcost-${actualIdx}" class="${isLinked ? 'auto-cost' : ''}" min="0" step="1" value="${Math.round(unitCost)}" style="width:80px" ${isLinked ? 'title="Auto-computed: material price × factor"' : ''}></td><td class="num total" id="rline-${actualIdx}">${fmt(lineTotal)}</td><td class="delcell"><button class="del" title="Remove">✕</button></td>`;
+      const inputs = tr.querySelectorAll("input");
+      const matSelect = tr.querySelector(".mat-select");
+      inputs[0].oninput = e => { r.ingredient = e.target.value; debouncedSave(); };
+      inputs[1].oninput = e => { r.qty = val(e); debouncedSave(); recompute(); };
+      inputs[2].oninput = e => { r.conversionFactor = val(e); inputs[3].value = Math.round(getIngredientCost(r)); debouncedSave(); recompute(); };
+      inputs[3].oninput = e => {
+        const newCost = val(e);
+        if (r.linkedMaterial) {
+          const mat = state.materials.find(m => m.name === r.linkedMaterial);
+          if (mat && mat.price > 0) { r.conversionFactor = newCost / mat.price; inputs[2].value = r.conversionFactor; }
+        } else { r.manualCost = newCost; }
+        debouncedSave(); recompute();
+      };
+      matSelect.onchange = e => {
+        r.linkedMaterial = e.target.value;
+        if (r.linkedMaterial) {
+          const mat = state.materials.find(m => m.name === r.linkedMaterial);
+          if (mat && mat.price > 0 && !r.conversionFactor) {
+            const currentCost = r.manualCost || r.cost || 0;
+            r.conversionFactor = currentCost > 0 ? currentCost / mat.price : 0.01;
+          }
+        }
+        debouncedSave(); renderRecipes(); recompute();
+      };
+      tr.querySelector(".del").onclick = () => { state.recipes.splice(actualIdx, 1); debouncedSave(); renderRecipes(); recompute(); };
+      tbody.appendChild(tr);
     });
-    const btn = document.createElement("button");
-    btn.className = "btn-add"; btn.textContent = "+ Add ingredient to " + p.name;
-    btn.onclick = () => { state.recipes.push({product: p.name, ingredient: "", qty: 1, cost: 0}); debouncedSave(); renderRecipes(); recompute(); };
-    card.appendChild(btn);
-    wrap.appendChild(card);
+    const btn = document.createElement("button"); btn.className = "btn-add"; btn.textContent = "+ Add ingredient to " + p.name;
+    btn.onclick = () => { state.recipes.push({product: p.name, ingredient: "", qty: 1, linkedMaterial:"", conversionFactor:0, manualCost:0}); debouncedSave(); renderRecipes(); recompute(); };
+    card.appendChild(btn); wrap.appendChild(card);
   });
   mount.appendChild(wrap);
-  state.products.forEach((p, pIdx) => {
-    const priceInput = document.getElementById("rprice-" + pIdx);
-    if(priceInput) { priceInput.oninput = e => { p.price = val(e); debouncedSave(); recompute(); }; }
-  });
+  state.products.forEach((p, pIdx) => { const priceInput = document.getElementById("rprice-" + pIdx); if(priceInput) { priceInput.oninput = e => { p.price = val(e); debouncedSave(); recompute(); }; } });
 }
 
-/* ================= recompute everything ================= */
+/* ================= P&L STATEMENT ================= */
+function renderPnL(){
+  const mount = document.getElementById('pnl-content');
+  if (!mount) return;
+  try {
+    if (!Array.isArray(state.products))  state.products  = clone(DEFAULTS.products);
+    if (!Array.isArray(state.recipes))   state.recipes   = clone(DEFAULTS.recipes);
+    if (!Array.isArray(state.labor))     state.labor     = clone(DEFAULTS.labor);
+    if (!Array.isArray(state.overhead))  state.overhead  = clone(DEFAULTS.overhead);
+    if (!state.pnlAssumptions) state.pnlAssumptions = clone(DEFAULTS.pnlAssumptions);
+    const a = state.pnlAssumptions;
+    const period = a.period || 'day';
+    const numPeriods = Math.max(1, Math.min(parseInt(a.periods) || 30, 60));
+    const growthRate = (parseFloat(a.growth) || 0) / 100;
+    const seasonality = (parseFloat(a.seasonality) || 100) / 100;
+    const priceIncrease = (parseFloat(a.priceIncrease) || 0) / 100;
+    const materialInflation = (parseFloat(a.materialInflation) || 0) / 100;
+    const labourIncrease = (parseFloat(a.labourIncrease) || 0) / 100;
+    const extraExpenses = parseFloat(a.extraExpenses) || 0;
+    const openDays = state.openDays || 26;
+    const periodDays = {day:1, week:7, month:openDays, year:openDays*12}[period] || 1;
+    const periodLabel = {day:'Day', week:'Week', month:'Month', year:'Year'}[period] || 'Period';
+
+    let colHeaders = '<th></th>';
+    for (let p = 1; p <= numPeriods; p++) colHeaders += '<th>' + periodLabel + ' ' + p + '</th>';
+
+    function periodFactors(p) {
+      return {
+        volFactor: Math.pow(1 + growthRate, p - 1) * seasonality,
+        priceFactor: Math.pow(1 + priceIncrease, p - 1),
+        matFactor: Math.pow(1 + materialInflation, p - 1),
+        labFactor: Math.pow(1 + labourIncrease, p - 1)
+      };
+    }
+
+    const rows = [];
+    rows.push({type:'header', label:'REVENUE'});
+    const totalRevenueByPeriod = new Array(numPeriods).fill(0);
+    state.products.forEach(p => {
+      if (!p.on) return;
+      const baseDailyUnits = p.unitsMode === 'daily' ? p.units : p.units / openDays;
+      const cells = [];
+      for (let pp = 1; pp <= numPeriods; pp++) {
+        const f = periodFactors(pp);
+        const revenue = (p.price * f.priceFactor) * (baseDailyUnits * periodDays * f.volFactor);
+        cells.push(revenue); totalRevenueByPeriod[pp-1] += revenue;
+      }
+      rows.push({type:'item', label:p.name, cells:cells, indent:1});
+    });
+    rows.push({type:'subtotal', label:'Total Revenue', cells:totalRevenueByPeriod});
+
+    rows.push({type:'header', label:'COST OF GOODS SOLD (Materials)'});
+    const materialCosts = {};
+    const totalCOGSByPeriod = new Array(numPeriods).fill(0);
+    state.products.forEach(p => {
+      if (!p.on) return;
+      const baseDailyUnits = p.unitsMode === 'daily' ? p.units : p.units / openDays;
+      state.recipes.filter(r => r.product === p.name).forEach(r => {
+        const matName = r.linkedMaterial || r.ingredient || 'Unlinked';
+        if (!materialCosts[matName]) materialCosts[matName] = new Array(numPeriods).fill(0);
+        for (let pp = 1; pp <= numPeriods; pp++) {
+          const f = periodFactors(pp);
+          materialCosts[matName][pp-1] += (getIngredientCost(r) * f.matFactor) * (baseDailyUnits * periodDays * f.volFactor);
+        }
+      });
+    });
+    Object.keys(materialCosts).forEach(matName => {
+      rows.push({type:'item', label:matName + (matName === 'Unlinked' ? ' (manual)' : ''), cells:materialCosts[matName], indent:1});
+      for (let pp = 0; pp < numPeriods; pp++) totalCOGSByPeriod[pp] += materialCosts[matName][pp];
+    });
+    rows.push({type:'subtotal', label:'Total COGS', cells:totalCOGSByPeriod});
+
+    const grossProfitByPeriod = totalRevenueByPeriod.map((rev, i) => rev - totalCOGSByPeriod[i]);
+    rows.push({type:'grand', label:'GROSS PROFIT', cells:grossProfitByPeriod});
+    rows.push({type:'item', label:'Gross Margin %', cells:grossProfitByPeriod.map((gp, i) => totalRevenueByPeriod[i] > 0 ? (gp / totalRevenueByPeriod[i] * 100) : 0), indent:1, isPct:true});
+
+    rows.push({type:'header', label:'LABOUR COSTS'});
+    const totalLabourByPeriod = new Array(numPeriods).fill(0);
+    state.labor.forEach(l => {
+      const baseDaily = (l.qty * l.price) / openDays;
+      const cells = [];
+      for (let pp = 1; pp <= numPeriods; pp++) {
+        const c = baseDaily * periodDays * periodFactors(pp).labFactor;
+        cells.push(c); totalLabourByPeriod[pp-1] += c;
+      }
+      rows.push({type:'item', label:l.name, cells:cells, indent:1});
+    });
+    rows.push({type:'subtotal', label:'Total Labour', cells:totalLabourByPeriod});
+
+    rows.push({type:'header', label:'OPERATING EXPENSES'});
+    const totalOverheadByPeriod = new Array(numPeriods).fill(0);
+    state.overhead.forEach(o => {
+      const baseDaily = (o.qty * o.price) / openDays;
+      const isFixed = o.fixed !== false;
+      const cells = [];
+      for (let pp = 1; pp <= numPeriods; pp++) {
+        const c = baseDaily * periodDays * (isFixed ? 1 : periodFactors(pp).volFactor);
+        cells.push(c); totalOverheadByPeriod[pp-1] += c;
+      }
+      rows.push({type:'item', label:o.name + (isFixed ? ' (fixed)' : ''), cells:cells, indent:1});
+    });
+    if (extraExpenses > 0) {
+      rows.push({type:'item', label:'Extra expenses (assumption)', cells:new Array(numPeriods).fill(extraExpenses), indent:1});
+      for (let pp = 0; pp < numPeriods; pp++) totalOverheadByPeriod[pp] += extraExpenses;
+    }
+    rows.push({type:'subtotal', label:'Total Operating Expenses', cells:totalOverheadByPeriod});
+
+    const netProfitByPeriod = grossProfitByPeriod.map((gp, i) => gp - totalLabourByPeriod[i] - totalOverheadByPeriod[i]);
+    rows.push({type:'grand', label:'NET PROFIT', cells:netProfitByPeriod, isNet:true});
+    rows.push({type:'item', label:'Net Margin %', cells:netProfitByPeriod.map((np, i) => totalRevenueByPeriod[i] > 0 ? (np / totalRevenueByPeriod[i] * 100) : 0), indent:1, isPct:true});
+    const cumNetCells = []; let cumNet = 0;
+    netProfitByPeriod.forEach(np => { cumNet += np; cumNetCells.push(cumNet); });
+    rows.push({type:'subtotal', label:'Cumulative Net Profit', cells:cumNetCells});
+
+    let html = '<div class="pnl-table-wrap"><table class="pnl-table"><thead><tr>' + colHeaders + '</tr></thead><tbody>';
+    rows.forEach(row => {
+      let trClass = '';
+      if (row.type === 'header') trClass = 'section-header';
+      else if (row.type === 'subtotal') trClass = 'subtotal';
+      else if (row.type === 'grand') trClass = 'grand-total';
+      else if (row.isNet && (row.cells || []).some(c => c < 0)) trClass = 'loss';
+      html += '<tr class="' + trClass + '">';
+      if (row.type === 'header') {
+        html += '<td colspan="' + (numPeriods + 1) + '">' + esc(row.label) + '</td>';
+      } else {
+        html += '<td class="' + (row.indent === 1 ? 'indent-1' : row.indent === 2 ? 'indent-2' : '') + '">' + esc(row.label) + '</td>';
+        (row.cells || []).forEach(cell => {
+          if (row.isPct) html += '<td class="pct">' + (isFinite(cell) ? cell.toFixed(1) : '0.0') + '%</td>';
+          else html += '<td class="' + (cell < 0 ? 'neg' : '') + '" title="Click for breakdown">' + fmt(cell) + '</td>';
+        });
+      }
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    mount.innerHTML = html;
+  } catch (error) {
+    console.error('Error in renderPnL:', error);
+    mount.innerHTML = '<div style="padding:20px; color:var(--bad); font-weight:700;">Error rendering P&L: ' + esc(error.message) + '</div>';
+  }
+}
+
+/* ================= recompute ================= */
 function recompute(){
   const sum = k => state[k].reduce((s,r) => s + (+r.qty||0)*(+r.price||0), 0);
   const totals = {};
@@ -863,29 +732,34 @@ function recompute(){
   state.products.forEach(p => recipeCosts[p.name] = 0);
   state.recipes.forEach((r, idx) => {
     if (!recipeCosts[r.product]) recipeCosts[r.product] = 0;
-    const lineTotal = (+r.qty || 0) * (+r.cost || 0);
+    const unitCost = getIngredientCost(r);
+    const lineTotal = unitCost * (+r.qty || 0);
     recipeCosts[r.product] += lineTotal;
     const lineEl = document.getElementById("rline-" + idx);
     if(lineEl) { const txt = fmt(lineTotal); if(lineEl.textContent !== txt){ lineEl.textContent = txt; lineEl.classList.remove("flash"); void lineEl.offsetWidth; lineEl.classList.add("flash"); } }
+    const costEl = document.getElementById("rcost-" + idx);
+    if(costEl && document.activeElement !== costEl) costEl.value = Math.round(unitCost);
   });
 
   state.products.forEach((p, pIdx) => {
-      const cost = recipeCosts[p.name] || 0; const margin = p.price > 0 ? ((p.price - cost) / p.price * 100) : 0;
-      let marginClass = "margin-good"; if(margin < 30) marginClass = "margin-bad"; else if(margin < 50) marginClass = "margin-low";
-      const costEl = document.getElementById("pcost-" + pIdx);
-      if(costEl) { const txt = fmt(cost); if(costEl.textContent !== txt){ costEl.textContent = txt; costEl.classList.remove("flash"); void costEl.offsetWidth; costEl.classList.add("flash"); } }
-      const marginEl = document.getElementById("pmargin-" + pIdx);
-      if(marginEl) { marginEl.textContent = margin.toFixed(0) + "% margin"; marginEl.className = "chip " + marginClass; }
-      const rtotalEl = document.getElementById("rtotal-" + pIdx);
-      if(rtotalEl) { const txt = fmt(cost); if(rtotalEl.textContent !== txt){ rtotalEl.textContent = txt; rtotalEl.classList.remove("flash"); void rtotalEl.offsetWidth; rtotalEl.classList.add("flash"); } }
-      const priceInput = document.getElementById("rprice-" + pIdx);
-      if(priceInput && document.activeElement !== priceInput) priceInput.value = p.price;
+    const cost = recipeCosts[p.name] || 0; const margin = p.price > 0 ? ((p.price - cost) / p.price * 100) : 0;
+    let marginClass = "margin-good"; if(margin < 30) marginClass = "margin-bad"; else if(margin < 50) marginClass = "margin-low";
+    const costEl = document.getElementById("pcost-" + pIdx);
+    if(costEl) { const txt = fmt(cost); if(costEl.textContent !== txt){ costEl.textContent = txt; costEl.classList.remove("flash"); void costEl.offsetWidth; costEl.classList.add("flash"); } }
+    const marginEl = document.getElementById("pmargin-" + pIdx);
+    if(marginEl) { marginEl.textContent = margin.toFixed(0) + "% margin"; marginEl.className = "chip " + marginClass; }
+    const rtotalEl = document.getElementById("rtotal-" + pIdx);
+    if(rtotalEl) { const txt = fmt(cost); if(rtotalEl.textContent !== txt){ rtotalEl.textContent = txt; rtotalEl.classList.remove("flash"); void rtotalEl.offsetWidth; rtotalEl.classList.add("flash"); } }
+    const priceInput = document.getElementById("rprice-" + pIdx);
+    if(priceInput && document.activeElement !== priceInput) priceInput.value = p.price;
   });
 
   let dRev = 0, dCost = 0, dUnits = 0, dProfit = 0;
   const od = +state.openDays || 0;
   state.products.forEach((p, i) => {
-    const calcCost = recipeCosts[p.name] || 0; const pr = +p.price||0, u = +p.units||0;
+    const calcCost = recipeCosts[p.name] || 0;
+    const dailyUnits = p.unitsMode === 'daily' ? p.units : p.units / od;
+    const pr = +p.price||0, u = dailyUnits;
     const dr = p.on ? pr*u : 0, mp = p.on ? (pr-calcCost)*u*od : 0;
     setCell("pc-" + i, fmt(calcCost)); setCell("pd-" + i, fmt(dr)); setCell("pm-" + i, fmt(mp));
     if(p.on){ dRev += dr; dCost += calcCost*u; dUnits += u; dProfit += mp; }
@@ -925,14 +799,24 @@ function recompute(){
   setCell("tk-days", od + " open days"); setCell("tk-payback", payback ? "payback ≈ " + payback.toFixed(1) + " months" : "revisit pricing");
   $("#tk-inv-sub").textContent = (state.lean ? "lean view — skips " : "full view — includes ") + flagCount + " flagged";
   setCell("tb-setup", compact(setupUsed)); setCell("tb-opex", compact(opex)); setCell("tb-net", compact(net));
+  renderPnL();
 }
 
-/* ================= chrome ================= */
 function renderAll(){
   Object.keys(PAIR_COLS).forEach(k => renderPairs(k));
   renderProducts(); renderRecipes();
   $("#in-days").value = state.openDays; $("#in-buffer").value = state.bufferMonths;
+  const a = state.pnlAssumptions || {};
+  if ($('#pnl-growth')) $('#pnl-growth').value = a.growth ?? 0;
+  if ($('#pnl-seasonality')) $('#pnl-seasonality').value = a.seasonality ?? 100;
+  if ($('#pnl-price-increase')) $('#pnl-price-increase').value = a.priceIncrease ?? 0;
+  if ($('#pnl-material-inflation')) $('#pnl-material-inflation').value = a.materialInflation ?? 0;
+  if ($('#pnl-extra-expenses')) $('#pnl-extra-expenses').value = a.extraExpenses ?? 0;
+  if ($('#pnl-labour-increase')) $('#pnl-labour-increase').value = a.labourIncrease ?? 0;
+  if ($('#pnl-periods')) $('#pnl-periods').value = a.periods ?? 30;
+  document.querySelectorAll('.pnl-period-btn').forEach(b => { b.classList.toggle('active', b.dataset.period === (a.period || 'day')); });
 }
+
 $("#in-days").addEventListener("input", e => { state.openDays = val(e); debouncedSave(); recompute(); });
 $("#in-buffer").addEventListener("input", e => { state.bufferMonths = val(e); debouncedSave(); recompute(); });
 $("#btn-full").onclick = () => { state.lean = false; debouncedSave(); recompute(); };
@@ -946,6 +830,43 @@ document.querySelectorAll(".tab").forEach(b => {
   };
 });
 
+const PERIOD_DEFAULTS = {day:30, week:12, month:12, year:5};
+document.querySelectorAll(".pnl-period-btn").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".pnl-period-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    state.pnlAssumptions = state.pnlAssumptions || {};
+    state.pnlAssumptions.period = b.dataset.period;
+    state.pnlAssumptions.periods = PERIOD_DEFAULTS[b.dataset.period] || 12;
+    if ($('#pnl-periods')) $('#pnl-periods').value = state.pnlAssumptions.periods;
+    debouncedSave(); renderPnL();
+  };
+});
+
+['pnl-growth','pnl-seasonality','pnl-price-increase','pnl-material-inflation','pnl-extra-expenses','pnl-labour-increase','pnl-periods'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('input', () => {
+      state.pnlAssumptions = state.pnlAssumptions || {};
+      state.pnlAssumptions.growth = parseFloat($('#pnl-growth').value) || 0;
+      state.pnlAssumptions.seasonality = parseFloat($('#pnl-seasonality').value) || 100;
+      state.pnlAssumptions.priceIncrease = parseFloat($('#pnl-price-increase').value) || 0;
+      state.pnlAssumptions.materialInflation = parseFloat($('#pnl-material-inflation').value) || 0;
+      state.pnlAssumptions.extraExpenses = parseFloat($('#pnl-extra-expenses').value) || 0;
+      state.pnlAssumptions.labourIncrease = parseFloat($('#pnl-labour-increase').value) || 0;
+      state.pnlAssumptions.periods = parseInt($('#pnl-periods').value) || 30;
+      debouncedSave(); renderPnL();
+    });
+  }
+});
+
+$('#btn-add-product-recipe').onclick = () => {
+  state.products.push({name:"New Product", on:true, price:300, units:10, unitsMode:"daily"});
+  state.recipes.push({product:"New Product", ingredient:"", qty:1, linkedMaterial:"", conversionFactor:0, manualCost:0});
+  renderProducts(); renderRecipes(); debouncedSave(); recompute();
+  setTimeout(() => { const recipeCards = document.querySelectorAll('#tbl-recipes .card'); if(recipeCards.length > 0) recipeCards[recipeCards.length-1].scrollIntoView({behavior:'smooth'}); }, 100);
+};
+
 function applyTheme(t){
   document.documentElement.dataset.theme = t;
   $("#icoMoon").style.display = t === "dark" ? "none" : ""; $("#icoSun").style.display  = t === "dark" ? "" : "none";
@@ -956,30 +877,261 @@ $("#btnPrint").onclick = () => window.print();
 $("#btnReset").onclick = () => {
   if(confirm("Reset every number back to the default plan? This will also clear the cloud sheet on next sync.")){
     state = clone(DEFAULTS);
-    try{ localStorage.removeItem("rp_state_v8"); }catch(e){}
+    try{ localStorage.removeItem("rp_state_v12"); }catch(e){}
     renderAll(); recompute(); debouncedSave();
   }
 };
+
+/* ===== P&L CELL DRILL-DOWN ===== */
+(function(){
+  const modal = document.getElementById('pnl-modal');
+  const titleEl = document.getElementById('pnl-modal-title');
+  const eyebrowEl = document.getElementById('pnl-modal-eyebrow');
+  const bodyEl = document.getElementById('pnl-modal-body');
+  const content = document.getElementById('pnl-content');
+  if(!modal || !content) return;
+
+  const num = n => (Math.round(n*100)/100).toLocaleString('en-PK');
+  const money = n => fmt(n);
+
+  function ctx(){
+    const a = state.pnlAssumptions || {};
+    const period = a.period || 'day';
+    const P = {
+      period,
+      numPeriods: Math.max(1, Math.min(parseInt(a.periods)||30, 60)),
+      growth:(parseFloat(a.growth)||0)/100,
+      season:(parseFloat(a.seasonality)||100)/100,
+      priceInc:(parseFloat(a.priceIncrease)||0)/100,
+      matInf:(parseFloat(a.materialInflation)||0)/100,
+      labInc:(parseFloat(a.labourIncrease)||0)/100,
+      extra: parseFloat(a.extraExpenses)||0,
+      openDays: state.openDays||26
+    };
+    P.periodDays = {day:1, week:7, month:P.openDays, year:P.openDays*12}[period]||1;
+    P.label = {day:'Day', week:'Week', month:'Month', year:'Year'}[period]||'Period';
+    return P;
+  }
+  function fac(P,p){
+    return {
+      vol: Math.pow(1+P.growth,p-1)*P.season,
+      price: Math.pow(1+P.priceInc,p-1),
+      mat: Math.pow(1+P.matInf,p-1),
+      lab: Math.pow(1+P.labInc,p-1)
+    };
+  }
+  const baseDailyUnits = pr => pr.unitsMode==='daily' ? pr.units : pr.units/(state.openDays||26);
+
+  function openModal(eyebrow, title, html){
+    eyebrowEl.textContent = eyebrow; titleEl.textContent = title;
+    bodyEl.innerHTML = html; modal.hidden = false;
+  }
+  const closeModal = () => { modal.hidden = true; };
+  document.getElementById('pnl-modal-close').onclick = closeModal;
+  modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+  const kv = (l,v) => '<div class="krow"><span>'+l+'</span><b>'+v+'</b></div>';
+  function table(headers, rows, totalRow){
+    let h = '<div class="dtl-wrap"><table class="dtl-table"><thead><tr>'+headers.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>';
+    rows.forEach(r => { h += '<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>'; });
+    if(totalRow) h += '<tr class="dtl-total">'+totalRow.map(c=>'<td>'+c+'</td>').join('')+'</tr>';
+    return h+'</tbody></table></div>';
+  }
+
+  function periodTotals(p,P){
+    const f = fac(P,p); let rev=0,cogs=0,lab=0,opex=0;
+    state.products.forEach(pr=>{ if(!pr.on) return;
+      const units = baseDailyUnits(pr)*P.periodDays*f.vol;
+      rev += pr.price*f.price*units;
+      state.recipes.filter(r=>r.product===pr.name).forEach(r=>{ cogs += getIngredientCost(r)*f.mat*units; });
+    });
+    state.labor.forEach(l=>{ lab += (l.qty*l.price)/P.openDays*P.periodDays*f.lab; });
+    state.overhead.forEach(o=>{ const fx=o.fixed!==false; opex += (o.qty*o.price)/P.openDays*P.periodDays*(fx?1:f.vol); });
+    opex += P.extra;
+    return {rev,cogs,lab,opex,gross:rev-cogs,net:rev-cogs-lab-opex};
+  }
+
+  function productDetail(pr,p,P){
+    const f = fac(P,p);
+    const units = baseDailyUnits(pr)*P.periodDays*f.vol;
+    const price = pr.price*f.price;
+    const revenue = price*units;
+    let html = '<div class="dtl-section">Sales — '+P.label+' '+p+'</div>';
+    html += kv('Base selling price', money(pr.price));
+    html += kv('Price this period (after increases)', money(price));
+    html += kv('Units sold (volume factor ×'+f.vol.toFixed(3)+')', num(units)+' units');
+    html += kv('Revenue', money(revenue));
+    html += '<div class="dtl-section">Ingredient cost breakdown</div>';
+    const rows = []; let tot = 0;
+    state.recipes.filter(r=>r.product===pr.name).forEach(r=>{
+      const mat = r.linkedMaterial ? state.materials.find(m=>m.name===r.linkedMaterial) : null;
+      const per = getIngredientCost(r)*f.mat;
+      const line = per*units; tot += line;
+      rows.push([esc(r.ingredient||'(unnamed)'), num(r.qty||0), esc(r.linkedMaterial||'— manual —'),
+        mat? num(r.conversionFactor||0) : '—',
+        mat? money(mat.price*f.mat) : '—',
+        money(per), money(line)]);
+    });
+    html += table(['Ingredient','Qty/portion','Linked material','Factor','Material rate (period)','Cost/unit (period)','Total (period)'], rows, ['Total','','','','','',money(tot)]);
+    html += kv('Gross profit this period', money(revenue-tot));
+    html += kv('Margin', revenue>0 ? ((revenue-tot)/revenue*100).toFixed(1)+'%' : '—');
+    html += '<p class="dtl-note">Factor = share of one purchase unit of the linked material used per portion. Rates include the material-inflation assumption for this period.</p>';
+    return html;
+  }
+
+  function materialDetail(matName,p,P){
+    const f = fac(P,p);
+    const mat = state.materials.find(m=>m.name===matName);
+    const rows = []; let tot=0, totQty=0;
+    state.products.forEach(pr=>{ if(!pr.on) return;
+      const units = baseDailyUnits(pr)*P.periodDays*f.vol;
+      state.recipes.filter(r=>r.product===pr.name && (r.linkedMaterial||r.ingredient||'Unlinked')===matName).forEach(r=>{
+        const per = getIngredientCost(r)*f.mat;
+        const amount = per*units;
+        const qty = mat ? units*(r.conversionFactor||0) : null;
+        tot += amount; if(qty!==null) totQty += qty;
+        rows.push([esc(pr.name), num(units)+' units', mat? num(r.conversionFactor||0)+' /unit':'—',
+          qty!==null? num(qty)+' purchase units':'—', money(per), money(amount)]);
+      });
+    });
+    let html = '<div class="dtl-section">'+esc(matName)+' — '+P.label+' '+p+'</div>';
+    if(mat){ html += kv('Base purchase price (Tab ②)', money(mat.price)); html += kv('Rate this period (after inflation)', money(mat.price*f.mat)); }
+    html += table(['Product','Units sold','Factor','Qty consumed','Cost/unit (period)','Amount'], rows, ['Total','','', mat? num(totQty)+' purchase units':'','',money(tot)]);
+    return html;
+  }
+
+  function laborDetail(l,p,P){
+    const f = fac(P,p);
+    const monthly = l.qty*l.price;
+    const amount = monthly/P.openDays*P.periodDays*f.lab;
+    let h = kv('Staff count', num(l.qty));
+    h += kv('Monthly pay per person', money(l.price));
+    h += kv('Monthly total (base)', money(monthly));
+    h += kv('Labour increase factor ('+P.label+' '+p+')', '×'+f.lab.toFixed(4));
+    h += kv('Days in period', num(P.periodDays));
+    h += kv('Amount this period', money(amount));
+    return h;
+  }
+
+  function overheadDetail(o,p,P){
+    const f = fac(P,p);
+    const fx = o.fixed !== false;
+    const monthly = o.qty*o.price;
+    const amount = monthly/P.openDays*P.periodDays*(fx?1:f.vol);
+    let h = kv('Type', fx? 'Fixed (does not scale with volume)' : 'Variable (scales with volume)');
+    h += kv('Monthly (base)', money(monthly));
+    h += kv('Scaling factor this period', '×'+((fx?1:f.vol).toFixed(4)));
+    h += kv('Days in period', num(P.periodDays));
+    h += kv('Amount this period', money(amount));
+    return h;
+  }
+
+  function totalRevenueDetail(p,P){
+    const f = fac(P,p); const rows = []; let tot=0;
+    state.products.forEach(pr=>{ if(!pr.on) return;
+      const units = baseDailyUnits(pr)*P.periodDays*f.vol;
+      const price = pr.price*f.price; const rev = price*units; tot += rev;
+      rows.push([esc(pr.name), num(units)+' units', money(price), money(rev)]);
+    });
+    return table(['Product','Units sold','Price (period)','Revenue'], rows, ['Total','','',money(tot)]);
+  }
+  function totalCogsDetail(p,P){
+    const f = fac(P,p); const map = {};
+    state.products.forEach(pr=>{ if(!pr.on) return;
+      const units = baseDailyUnits(pr)*P.periodDays*f.vol;
+      state.recipes.filter(r=>r.product===pr.name).forEach(r=>{
+        const k = r.linkedMaterial||r.ingredient||'Unlinked';
+        map[k] = (map[k]||0) + getIngredientCost(r)*f.mat*units;
+      });
+    });
+    const rows = Object.keys(map).map(k=>[esc(k)+(k==='Unlinked'?' (manual)':''), money(map[k])]);
+    const tot = Object.values(map).reduce((s,v)=>s+v,0);
+    return table(['Material / ingredient group','Amount'], rows, ['Total', money(tot)]);
+  }
+  function totalLabourDetail(p,P){
+    const f = fac(P,p); const rows = []; let tot=0;
+    state.labor.forEach(l=>{
+      const amt = (l.qty*l.price)/P.openDays*P.periodDays*f.lab; tot += amt;
+      rows.push([esc(l.name), num(l.qty), money(l.price), money(amt)]);
+    });
+    return table(['Role','Staff','Monthly pay/person','Amount (period)'], rows, ['Total','','',money(tot)]);
+  }
+  function totalOpexDetail(p,P){
+    const f = fac(P,p); const rows = []; let tot=0;
+    state.overhead.forEach(o=>{
+      const fx = o.fixed!==false;
+      const amt = (o.qty*o.price)/P.openDays*P.periodDays*(fx?1:f.vol); tot += amt;
+      rows.push([esc(o.name), fx?'Fixed':'Variable', money(o.qty*o.price), money(amt)]);
+    });
+    if(P.extra>0){ rows.push(['Extra expenses (assumption)','Fixed','—',money(P.extra)]); tot += P.extra; }
+    return table(['Expense','Type','Monthly (base)','Amount (period)'], rows, ['Total','','',money(tot)]);
+  }
+  function grossDetail(p,P){
+    const t = periodTotals(p,P);
+    return kv('Revenue', money(t.rev)) + kv('Cost of goods sold', money(t.cogs)) + kv('Gross profit', money(t.gross)) + kv('Gross margin', t.rev>0?(t.gross/t.rev*100).toFixed(1)+'%':'—') + '<p class="dtl-note">Click individual product or material rows for ingredient-level detail.</p>';
+  }
+  function netDetail(p,P){
+    const t = periodTotals(p,P);
+    return kv('Revenue', money(t.rev)) + kv('COGS', money(t.cogs)) + kv('Gross profit', money(t.gross)) + kv('Labour', money(t.lab)) + kv('Operating expenses', money(t.opex)) + kv('Net profit', money(t.net)) + kv('Net margin', t.rev>0?(t.net/t.rev*100).toFixed(1)+'%':'—');
+  }
+  function cumDetail(p,P){
+    const rows = []; let cum=0;
+    for(let i=1;i<=p;i++){ const n = periodTotals(i,P).net; cum += n; rows.push([P.label+' '+i, money(n), money(cum)]); }
+    return table(['Period','Net profit','Cumulative'], rows, ['Up to '+P.label+' '+p,'',money(cum)]);
+  }
+  function extraDetail(p,P){
+    return kv('Extra fixed expenses per period', money(P.extra)) + '<p class="dtl-note">Set in the Forecast Assumptions panel below the statement.</p>';
+  }
+
+  content.addEventListener('click', e=>{
+    const td = e.target.closest('td');
+    if(!td || !content.contains(td)) return;
+    const tr = td.parentElement;
+    if(!tr || tr.classList.contains('section-header')) return;
+    const idx = td.cellIndex;
+    if(idx <= 0) return;
+    const label = tr.cells[0].textContent.trim();
+    if(label.endsWith('%')) return;
+    const P = ctx();
+    const p = idx;
+    if(p < 1 || p > P.numPeriods) return;
+
+    let html = null;
+    if(label==='Total Revenue') html = totalRevenueDetail(p,P);
+    else if(label==='Total COGS') html = totalCogsDetail(p,P);
+    else if(label==='GROSS PROFIT') html = grossDetail(p,P);
+    else if(label==='Total Labour') html = totalLabourDetail(p,P);
+    else if(label==='Total Operating Expenses') html = totalOpexDetail(p,P);
+    else if(label==='NET PROFIT') html = netDetail(p,P);
+    else if(label==='Cumulative Net Profit') html = cumDetail(p,P);
+    else if(label==='Extra expenses (assumption)') html = extraDetail(p,P);
+    else {
+      const prod = state.products.find(x=>x.name===label);
+      if(prod) html = productDetail(prod,p,P);
+      else {
+        const lab = state.labor.find(x=>x.name===label);
+        if(lab) html = laborDetail(lab,p,P);
+        else {
+          const ov = state.overhead.find(x=>x.name===label.replace(' (fixed)',''));
+          if(ov) html = overheadDetail(ov,p,P);
+          else html = materialDetail(label.replace(' (manual)',''),p,P);
+        }
+      }
+    }
+    openModal(P.label+' '+p+' — full breakdown', label, html);
+  });
+})();
 
 /* init */
 (function(){
   let t = "light";
   try{ t = localStorage.getItem("rp_theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); }catch(e){}
   applyTheme(t);
-  
-  try{
-    const saved = JSON.parse(localStorage.getItem("rp_state_v8"));
-    if(saved && saved.products && saved.kitchen) state = Object.assign(clone(DEFAULTS), saved);
-  }catch(e){}
-  
-  renderAll();
-  recompute();
-  
-  if (navigator.onLine && SYNC_URL && !SYNC_URL.includes('PASTE_YOUR')) {
-    syncFromCloud();
-  } else {
-    updateSyncStatus(navigator.onLine ? 'synced' : 'offline', navigator.onLine ? 'Local Saved' : 'Offline');
-  }
+  try{ const saved = JSON.parse(localStorage.getItem("rp_state_v12")); if(saved && saved.products && saved.kitchen) state = Object.assign(clone(DEFAULTS), saved); }catch(e){}
+  migrateState();
+  renderAll(); recompute();
+  if (navigator.onLine && SYNC_URL && !SYNC_URL.includes('PASTE_YOUR')) { syncFromCloud(); } else { updateSyncStatus(navigator.onLine ? 'synced' : 'offline', navigator.onLine ? 'Local Saved' : 'Offline'); }
 })();
 </script>
 </body>
