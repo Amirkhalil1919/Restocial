@@ -404,15 +404,16 @@ main{max-width:min(1720px,96vw)}
             <div id="pnl-vol-box"></div>
           </div>
           <h4>📈 Forecast Assumptions</h4>
-          <div class="pnl-field" style="max-width:420px; margin-bottom:14px"><label for="pnl-growth-mode">Volume growth method</label><select id="pnl-growth-mode"><option value="percent">Compounding percentage per period</option><option value="absolute">Fixed units added per month</option></select></div>
+          <p class="hint" style="margin:-4px 0 12px">All rates below are <b>per month</b>. Each column is the amount earned or spent over the real time it covers, so Daily, Weekly, Monthly and Yearly views reconcile: a month equals the sum of its days, a year equals the sum of its months.</p>
+          <div class="pnl-field" style="max-width:420px; margin-bottom:14px"><label for="pnl-growth-mode">Volume growth method</label><select id="pnl-growth-mode"><option value="percent">Compounding percentage per month</option><option value="absolute">Fixed units added per month</option></select></div>
           <div id="pnl-abs-box" hidden></div>
           <div class="pnl-grid">
-            <div class="pnl-field"><label>Volume growth per period (%)</label><input type="number" id="pnl-growth" value="0" step="0.5" min="-50" max="100"></div>
+            <div class="pnl-field"><label>Volume growth per month (%)</label><input type="number" id="pnl-growth" value="0" step="0.5" min="-50" max="100"></div>
             <div class="pnl-field"><label>Seasonality / demand factor (%)</label><input type="number" id="pnl-seasonality" value="100" step="5" min="0" max="300"></div>
-            <div class="pnl-field"><label>Selling price increase per period (%)</label><input type="number" id="pnl-price-increase" value="0" step="0.5" min="0" max="50"></div>
-            <div class="pnl-field"><label>Material cost inflation per period (%)</label><input type="number" id="pnl-material-inflation" value="0" step="0.5" min="0" max="50"></div>
-            <div class="pnl-field"><label>Extra fixed expenses per period (Rs)</label><input type="number" id="pnl-extra-expenses" value="0" step="1000" min="0"></div>
-            <div class="pnl-field"><label>Labour cost increase per period (%)</label><input type="number" id="pnl-labour-increase" value="0" step="0.5" min="0" max="50"></div>
+            <div class="pnl-field"><label>Selling price increase per month (%)</label><input type="number" id="pnl-price-increase" value="0" step="0.5" min="0" max="50"></div>
+            <div class="pnl-field"><label>Material cost inflation per month (%)</label><input type="number" id="pnl-material-inflation" value="0" step="0.5" min="0" max="50"></div>
+            <div class="pnl-field"><label>Extra fixed expenses per month (Rs)</label><input type="number" id="pnl-extra-expenses" value="0" step="1000" min="0"></div>
+            <div class="pnl-field"><label>Labour cost increase per month (%)</label><input type="number" id="pnl-labour-increase" value="0" step="0.5" min="0" max="50"></div>
           </div>
         </div>
       </div>
@@ -550,28 +551,80 @@ function baseDailyUnits(pr, openDays){
   if (pr.unitsMode === 'weekly')  return u * 52 / (od * 12);   // open days per week = od*12/52
   return u;                                                    // daily
 }
-/* ===== growth helpers: percent (compounding) or absolute units per month =====
-   Volume growth + seasonality apply only when the product's Growth toggle is on. */
-function unitsFor(pr, p, P){
-  const bd = baseDailyUnits(pr, P.openDays);
-  const base = bd * P.periodDays;
-  if (!pr.fGrow) return base;                      // flat: no growth, no seasonality
-  if (!P.abs) return base * Math.pow(1 + P.growth, p - 1) * P.season;
-  const monthsElapsed = (p - 1) * (P.periodDays / P.openDays);
-  const extraDaily = ((+pr.unitsStep || 0) / P.openDays) * monthsElapsed;
-  return Math.max(0, (bd + extraDaily) * P.periodDays) * P.season;
+/* ===== time-consistent P&L engine =====
+   Every rate (growth, price, inflation, labour) is PER MONTH. A displayed period
+   is the integral of the run-rate over the real time it spans, so Daily, Weekly,
+   Monthly and Yearly reconcile exactly: finer periods sum to coarser ones.
+   Volume growth and seasonality apply to a line only when its Growth toggle is on. */
+function pnlCtx(a){
+  a = a || {};
+  const period = a.period || 'day';
+  const openDays = getOpenDays();
+  const periodDays = {day:1, week:openDays*12/52, month:openDays, year:openDays*12}[period] || 1;
+  return {
+    period, openDays, periodDays,
+    mStep: periodDays / openDays,                 // real months spanned by one displayed period
+    abs: a.growthMode === 'absolute',
+    rVol:   (parseFloat(a.growth) || 0) / 100,
+    rPrice: (parseFloat(a.priceIncrease) || 0) / 100,
+    rMat:   (parseFloat(a.materialInflation) || 0) / 100,
+    rLab:   (parseFloat(a.labourIncrease) || 0) / 100,
+    season: numOr(a.seasonality, 100) / 100,
+    extra:  parseFloat(a.extraExpenses) || 0,
+    numPeriods: Math.max(1, Math.min(parseInt(a.periods) || 30, 60)),
+    label: {day:'Day', week:'Week', month:'Month', year:'Year'}[period] || 'Period'
+  };
 }
-function effVol(P, p){
-  if (!P.abs) return Math.pow(1 + P.growth, p - 1) * P.season;
-  let base = 0, now = 0;
-  state.products.forEach(pr => {
-    if (!pr.on) return;
-    const price = +pr.price || 0;
-    base += price * unitsFor(pr, 1, Object.assign({}, P, {season: 1}));
-    now  += price * unitsFor(pr, p, P);
-  });
-  return base > 0 ? now / base : P.season;
+const monthBounds = (P, i) => [i * P.mStep, (i + 1) * P.mStep];   // i = 0-based period index
+/* integral over [mA,mB] months of (1+r)^m dm */
+function expBlock(r, mA, mB){
+  if (!r) return mB - mA;
+  const L = Math.log(1 + r);
+  return (Math.pow(1 + r, mB) - Math.pow(1 + r, mA)) / L;
 }
+/* integral over [mA,mB] of (a + b*m)(1+r)^m dm  (linear volume x exponential price) */
+function linExpBlock(a, b, r, mA, mB){
+  if (!r) return a * (mB - mA) + b * (mB*mB - mA*mA) / 2;
+  const c = 1 + r, L = Math.log(c);
+  const F = m => Math.pow(c, m) * ((a + b*m) / L - b / (L*L));
+  return F(mB) - F(mA);
+}
+const baseMonthlyUnits = (pr, P) => baseDailyUnits(pr, P.openDays) * P.openDays;
+
+/* ---- per-line amount for one displayed period i (0-based) ---- */
+function prodUnits(pr, P, i){
+  const [mA,mB] = monthBounds(P,i);
+  const u0 = baseMonthlyUnits(pr,P), seas = pr.fGrow ? P.season : 1;
+  if (!P.abs) return seas * u0 * expBlock(pr.fGrow ? P.rVol : 0, mA, mB);
+  return seas * linExpBlock(u0, pr.fGrow ? (+pr.unitsStep||0) : 0, 0, mA, mB);
+}
+function prodRevenue(pr, P, i){
+  const [mA,mB] = monthBounds(P,i);
+  const u0 = baseMonthlyUnits(pr,P), seas = pr.fGrow ? P.season : 1, rp = pr.fPrice ? P.rPrice : 0;
+  if (!P.abs){ const R = (1 + (pr.fGrow ? P.rVol : 0)) * (1 + rp) - 1; return pr.price * seas * u0 * expBlock(R, mA, mB); }
+  return pr.price * seas * linExpBlock(u0, pr.fGrow ? (+pr.unitsStep||0) : 0, rp, mA, mB);
+}
+function lineCogs(pr, r, matObj, P, i){
+  const [mA,mB] = monthBounds(P,i);
+  const u0 = baseMonthlyUnits(pr,P), seas = pr.fGrow ? P.season : 1;
+  const inflOn = matObj ? matObj.fInfl !== false : true, rm = inflOn ? P.rMat : 0, lc = getLineCost(r);
+  if (!P.abs){ const R = (1 + (pr.fGrow ? P.rVol : 0)) * (1 + rm) - 1; return lc * seas * u0 * expBlock(R, mA, mB); }
+  return lc * seas * linExpBlock(u0, pr.fGrow ? (+pr.unitsStep||0) : 0, rm, mA, mB);
+}
+function lineLabour(l, P, i){
+  const [mA,mB] = monthBounds(P,i);
+  return (l.qty * l.price) * expBlock(l.fGrow ? P.rLab : 0, mA, mB);
+}
+function lineOverhead(o, P, i){
+  const [mA,mB] = monthBounds(P,i), base = o.qty * o.price;
+  if (!o.fGrow) return base * (mB - mA);
+  if (!P.abs) return base * expBlock(P.rVol, mA, mB);
+  // absolute mode: overhead follows blended business volume, sampled at the period midpoint
+  const mid = (mA + mB) / 2; let b0 = 0, bm = 0;
+  state.products.forEach(pr => { if (!pr.on) return; const u0 = baseMonthlyUnits(pr,P), seas = pr.fGrow ? P.season : 1, st = pr.fGrow ? (+pr.unitsStep||0) : 0; b0 += pr.price*seas*u0; bm += pr.price*seas*(u0 + st*mid); });
+  return base * (mB - mA) * (b0 > 0 ? bm / b0 : 1);
+}
+const extraFor = (P, i) => { const [mA,mB] = monthBounds(P,i); return P.extra * (mB - mA); };
 function renderAbsBox(){
   const box = document.getElementById('pnl-abs-box'), sel = document.getElementById('pnl-growth-mode');
   if (!box || !sel) return;
@@ -757,12 +810,22 @@ function renderRecipes(){
 function facTip(fac){
   return {
     grow:   'Growth: volume growth and seasonality apply to this line. Off keeps it at base volume.',
-    price:  'Price: selling-price increase per period applies to this line. Off holds the base price.',
-    infl:   'Inflation: material cost inflation per period applies to this line. Off holds the base cost.',
-    labour: 'Labour: labour cost increase per period applies to this line. Off holds the base pay.'
+    price:  'Price: selling-price increase per month applies to this line. Off holds the base price.',
+    infl:   'Inflation: material cost inflation per month applies to this line. Off holds the base cost.',
+    labour: 'Labour: labour cost increase per month applies to this line. Off holds the base pay.'
   }[fac] || '';
 }
+/* P&L render is split into a coalesced scheduler and the worker below.
+   The statement is only built while its tab is visible, so edits on other
+   tabs no longer rebuild a 60-column table on every keystroke. */
+let _pnlRaf = 0;
+function pnlPanelActive(){ const el = document.getElementById('panel-pnl'); return !!(el && el.classList.contains('active')); }
 function renderPnL(){
+  if (!pnlPanelActive()) return;            // rebuilt on tab switch instead
+  if (_pnlRaf) return;                       // coalesce a burst into one frame
+  _pnlRaf = requestAnimationFrame(() => { _pnlRaf = 0; renderPnLNow(); });
+}
+function renderPnLNow(){
   const mount = document.getElementById('pnl-content');
   if (!mount) return;
   try {
@@ -772,44 +835,16 @@ function renderPnL(){
     if (!Array.isArray(state.overhead))  state.overhead  = clone(DEFAULTS.overhead);
     if (!state.pnlAssumptions) state.pnlAssumptions = clone(DEFAULTS.pnlAssumptions);
     const a = state.pnlAssumptions;
-    const period = a.period || 'day';
-    const numPeriods = Math.max(1, Math.min(parseInt(a.periods) || 30, 60));
-    const growthRate = (parseFloat(a.growth) || 0) / 100;
-    const seasonality = numOr(a.seasonality, 100) / 100;
-    const priceIncrease = (parseFloat(a.priceIncrease) || 0) / 100;
-    const materialInflation = (parseFloat(a.materialInflation) || 0) / 100;
-    const labourIncrease = (parseFloat(a.labourIncrease) || 0) / 100;
-    const extraExpenses = parseFloat(a.extraExpenses) || 0;
-    const openDays = getOpenDays();
-    const periodDays = {day:1, week:openDays*12/52, month:openDays, year:openDays*12}[period] || 1;
-    const periodLabel = {day:'Day', week:'Week', month:'Month', year:'Year'}[period] || 'Period';
-    const isAbs = a.growthMode === 'absolute';
-    const PP = {abs:isAbs, growth:growthRate, season:seasonality, openDays:openDays, periodDays:periodDays};
-
-    let colHeaders = '<th></th>';
-    for (let p = 1; p <= numPeriods; p++) colHeaders += '<th>' + periodLabel + ' ' + p + '</th>';
-
-    function periodFactors(p) {
-      return {
-        volFactor: effVol(PP, p),
-        priceFactor: Math.pow(1 + priceIncrease, p - 1),
-        matFactor: Math.pow(1 + materialInflation, p - 1),
-        labFactor: Math.pow(1 + labourIncrease, p - 1)
-      };
-    }
+    const P = pnlCtx(a);
+    const numPeriods = P.numPeriods, periodLabel = P.label;
 
     const rows = [];
     rows.push({type:'header', label:'REVENUE'});
     const totalRevenueByPeriod = new Array(numPeriods).fill(0);
     state.products.forEach(p => {
       if (!p.on) return;
-      const cells = [];
-      for (let pp = 1; pp <= numPeriods; pp++) {
-        const f = periodFactors(pp);
-        const pf = p.fPrice ? f.priceFactor : 1;
-        const revenue = (p.price * pf) * unitsFor(p, pp, PP);
-        cells.push(revenue); totalRevenueByPeriod[pp-1] += revenue;
-      }
+      const cells = new Array(numPeriods);
+      for (let i = 0; i < numPeriods; i++){ const rev = prodRevenue(p, P, i); cells[i] = rev; totalRevenueByPeriod[i] += rev; }
       rows.push({type:'item', label:p.name, cells:cells, indent:1,
         facs:[{kind:'product',name:p.name,fac:'grow',on:!!p.fGrow,label:'Growth'},
               {kind:'product',name:p.name,fac:'price',on:!!p.fPrice,label:'Price'}]});
@@ -824,38 +859,31 @@ function renderPnL(){
       state.recipes.filter(r => r.product === p.name).forEach(r => {
         const matName = r.linkedMaterial || r.ingredient || 'Unlinked';
         const matObj = r.linkedMaterial ? state.materials.find(m => m.name === r.linkedMaterial) : null;
-        const inflOn = matObj ? matObj.fInfl !== false : true;
-        if (!materialCosts[matName]) materialCosts[matName] = new Array(numPeriods).fill(0);
-        for (let pp = 1; pp <= numPeriods; pp++) {
-          const f = periodFactors(pp);
-          const mf = inflOn ? f.matFactor : 1;
-          materialCosts[matName][pp-1] += (getLineCost(r) * mf) * unitsFor(p, pp, PP);
-        }
+        let arr = materialCosts[matName];
+        if (!arr) arr = materialCosts[matName] = new Array(numPeriods).fill(0);
+        for (let i = 0; i < numPeriods; i++) arr[i] += lineCogs(p, r, matObj, P, i);
       });
     });
     Object.keys(materialCosts).forEach(matName => {
       const matObj = state.materials.find(m => m.name === matName);
-      const row = {type:'item', label:matName + (matName === 'Unlinked' ? ' (manual)' : ''), cells:materialCosts[matName], indent:1};
+      const arr = materialCosts[matName];
+      const row = {type:'item', label:matName + (matName === 'Unlinked' ? ' (manual)' : ''), cells:arr, indent:1};
       if (matObj) row.facs = [{kind:'material',name:matName,fac:'infl',on:matObj.fInfl!==false,label:'Inflation'}];
       rows.push(row);
-      for (let pp = 0; pp < numPeriods; pp++) totalCOGSByPeriod[pp] += materialCosts[matName][pp];
+      for (let i = 0; i < numPeriods; i++) totalCOGSByPeriod[i] += arr[i];
     });
     rows.push({type:'subtotal', label:'Total COGS', cells:totalCOGSByPeriod});
 
-    const grossProfitByPeriod = totalRevenueByPeriod.map((rev, i) => rev - totalCOGSByPeriod[i]);
+    const grossProfitByPeriod = new Array(numPeriods);
+    for (let i = 0; i < numPeriods; i++) grossProfitByPeriod[i] = totalRevenueByPeriod[i] - totalCOGSByPeriod[i];
     rows.push({type:'grand', label:'GROSS PROFIT', cells:grossProfitByPeriod});
     rows.push({type:'item', label:'Gross Margin %', cells:grossProfitByPeriod.map((gp, i) => totalRevenueByPeriod[i] > 0 ? (gp / totalRevenueByPeriod[i] * 100) : 0), indent:1, isPct:true});
 
     rows.push({type:'header', label:'LABOUR COSTS'});
     const totalLabourByPeriod = new Array(numPeriods).fill(0);
     state.labor.forEach(l => {
-      const baseDaily = (l.qty * l.price) / openDays;
-      const cells = [];
-      for (let pp = 1; pp <= numPeriods; pp++) {
-        const lf = l.fGrow ? periodFactors(pp).labFactor : 1;
-        const c = baseDaily * periodDays * lf;
-        cells.push(c); totalLabourByPeriod[pp-1] += c;
-      }
+      const cells = new Array(numPeriods);
+      for (let i = 0; i < numPeriods; i++){ const c = lineLabour(l, P, i); cells[i] = c; totalLabourByPeriod[i] += c; }
       rows.push({type:'item', label:l.name, cells:cells, indent:1,
         facs:[{kind:'labour',name:l.name,fac:'labour',on:!!l.fGrow,label:'Labour'}]});
     });
@@ -864,56 +892,61 @@ function renderPnL(){
     rows.push({type:'header', label:'OPERATING EXPENSES'});
     const totalOverheadByPeriod = new Array(numPeriods).fill(0);
     state.overhead.forEach(o => {
-      const baseDaily = (o.qty * o.price) / openDays;
-      const cells = [];
-      for (let pp = 1; pp <= numPeriods; pp++) {
-        const vf = o.fGrow ? periodFactors(pp).volFactor : 1;
-        const c = baseDaily * periodDays * vf;
-        cells.push(c); totalOverheadByPeriod[pp-1] += c;
-      }
+      const cells = new Array(numPeriods);
+      for (let i = 0; i < numPeriods; i++){ const c = lineOverhead(o, P, i); cells[i] = c; totalOverheadByPeriod[i] += c; }
       rows.push({type:'item', label:o.name, cells:cells, indent:1,
         facs:[{kind:'overhead',name:o.name,fac:'grow',on:!!o.fGrow,label:'Growth'}]});
     });
-    if (extraExpenses > 0) {
-      rows.push({type:'item', label:'Extra expenses (assumption)', cells:new Array(numPeriods).fill(extraExpenses), indent:1});
-      for (let pp = 0; pp < numPeriods; pp++) totalOverheadByPeriod[pp] += extraExpenses;
+    if (P.extra > 0) {
+      const cells = new Array(numPeriods);
+      for (let i = 0; i < numPeriods; i++){ const e = extraFor(P, i); cells[i] = e; totalOverheadByPeriod[i] += e; }
+      rows.push({type:'item', label:'Extra expenses (assumption)', cells:cells, indent:1});
     }
     rows.push({type:'subtotal', label:'Total Operating Expenses', cells:totalOverheadByPeriod});
 
-    const netProfitByPeriod = grossProfitByPeriod.map((gp, i) => gp - totalLabourByPeriod[i] - totalOverheadByPeriod[i]);
+    const netProfitByPeriod = new Array(numPeriods);
+    for (let i = 0; i < numPeriods; i++) netProfitByPeriod[i] = grossProfitByPeriod[i] - totalLabourByPeriod[i] - totalOverheadByPeriod[i];
     rows.push({type:'grand', label:'NET PROFIT', cells:netProfitByPeriod, isNet:true});
     rows.push({type:'item', label:'Net Margin %', cells:netProfitByPeriod.map((np, i) => totalRevenueByPeriod[i] > 0 ? (np / totalRevenueByPeriod[i] * 100) : 0), indent:1, isPct:true});
-    const cumNetCells = []; let cumNet = 0;
-    netProfitByPeriod.forEach(np => { cumNet += np; cumNetCells.push(cumNet); });
+    const cumNetCells = new Array(numPeriods); let cumNet = 0;
+    for (let i = 0; i < numPeriods; i++){ cumNet += netProfitByPeriod[i]; cumNetCells[i] = cumNet; }
     rows.push({type:'subtotal', label:'Cumulative Net Profit', cells:cumNetCells});
 
-    let html = '<div class="pnl-table-wrap"><table class="pnl-table"><thead><tr>' + colHeaders + '</tr></thead><tbody>';
-    rows.forEach(row => {
+    /* build the table as one joined string */
+    const parts = ['<div class="pnl-table-wrap"><table class="pnl-table"><thead><tr><th></th>'];
+    for (let i = 1; i <= numPeriods; i++) parts.push('<th>' + periodLabel + ' ' + i + '</th>');
+    parts.push('</tr></thead><tbody>');
+    for (let ri = 0; ri < rows.length; ri++){
+      const row = rows[ri];
       let trClass = '';
       if (row.type === 'header') trClass = 'section-header';
       else if (row.type === 'subtotal') trClass = 'subtotal';
       else if (row.type === 'grand') trClass = 'grand-total';
       else if (row.isNet && (row.cells || []).some(c => c < 0)) trClass = 'loss';
-      html += '<tr class="' + trClass + '">';
+      parts.push('<tr class="' + trClass + '">');
       if (row.type === 'header') {
-        html += '<td colspan="' + (numPeriods + 1) + '">' + esc(row.label) + '</td>';
+        parts.push('<td colspan="' + (numPeriods + 1) + '">' + esc(row.label) + '</td>');
       } else {
         let labelCell = esc(row.label);
         if (row.facs && row.facs.length) {
-          labelCell += '<span class="facs">' + row.facs.map(fc =>
-            '<button class="pnl-fac' + (fc.on ? ' on' : '') + '" data-kind="' + fc.kind + '" data-name="' + esc(fc.name) + '" data-fac="' + fc.fac + '" title="' + facTip(fc.fac) + '">' + fc.label + '</button>'
-          ).join('') + '</span>';
+          labelCell += '<span class="facs">';
+          for (let fi = 0; fi < row.facs.length; fi++){ const fc = row.facs[fi];
+            labelCell += '<button class="pnl-fac' + (fc.on ? ' on' : '') + '" data-kind="' + fc.kind + '" data-name="' + esc(fc.name) + '" data-fac="' + fc.fac + '" title="' + facTip(fc.fac) + '">' + fc.label + '</button>';
+          }
+          labelCell += '</span>';
         }
-        html += '<td class="' + (row.indent === 1 ? 'indent-1' : row.indent === 2 ? 'indent-2' : '') + '">' + labelCell + '</td>';
-        (row.cells || []).forEach(cell => {
-          if (row.isPct) html += '<td class="pct">' + (isFinite(cell) ? cell.toFixed(1) : '0.0') + '%</td>';
-          else html += '<td class="' + (cell < 0 ? 'neg' : '') + '" title="Click for breakdown">' + fmt(cell) + '</td>';
-        });
+        parts.push('<td data-label="' + esc(row.label) + '" class="' + (row.indent === 1 ? 'indent-1' : row.indent === 2 ? 'indent-2' : '') + '">' + labelCell + '</td>');
+        const cells = row.cells || [];
+        if (row.isPct) {
+          for (let i = 0; i < cells.length; i++){ const cell = cells[i]; parts.push('<td class="pct">' + (isFinite(cell) ? cell.toFixed(1) : '0.0') + '%</td>'); }
+        } else {
+          for (let i = 0; i < cells.length; i++){ const cell = cells[i]; parts.push('<td class="' + (cell < 0 ? 'neg' : '') + '" title="Click for breakdown">' + fmt(cell) + '</td>'); }
+        }
       }
-      html += '</tr>';
-    });
-    html += '</tbody></table></div>';
-    mount.innerHTML = html;
+      parts.push('</tr>');
+    }
+    parts.push('</tbody></table></div>');
+    mount.innerHTML = parts.join('');
   } catch (error) {
     console.error('Error in renderPnL:', error);
     mount.innerHTML = '<div style="padding:20px; color:var(--bad); font-weight:700;">Error rendering P&L: ' + esc(error.message) + '</div>';
@@ -1043,7 +1076,7 @@ document.querySelectorAll(".tab").forEach(b => {
     document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
     document.querySelectorAll(".panel").forEach(x => x.classList.remove("active"));
     b.classList.add("active"); document.getElementById(b.dataset.panel).classList.add("active");
-    if (b.dataset.panel === "panel-pnl") { renderAbsBox(); renderVolBox(); }
+    if (b.dataset.panel === "panel-pnl") { renderAbsBox(); renderVolBox(); renderPnLNow(); }
     if (b.dataset.panel === "panel-recipes") renderRecipes();
   };
 });
@@ -1121,33 +1154,7 @@ $("#btnReset").onclick = () => {
   const num = n => (Math.round(n*100)/100).toLocaleString('en-PK');
   const money = n => fmt(n);
 
-  function ctx(){
-    const a = state.pnlAssumptions || {};
-    const period = a.period || 'day';
-    const P = {
-      period,
-      numPeriods: Math.max(1, Math.min(parseInt(a.periods)||30, 60)),
-      growth:(parseFloat(a.growth)||0)/100,
-      season:numOr(a.seasonality,100)/100,
-      priceInc:(parseFloat(a.priceIncrease)||0)/100,
-      matInf:(parseFloat(a.materialInflation)||0)/100,
-      labInc:(parseFloat(a.labourIncrease)||0)/100,
-      extra: parseFloat(a.extraExpenses)||0,
-      openDays: getOpenDays()
-    };
-    P.periodDays = {day:1, week:P.openDays*12/52, month:P.openDays, year:P.openDays*12}[period]||1;
-    P.label = {day:'Day', week:'Week', month:'Month', year:'Year'}[period]||'Period';
-    P.abs = a.growthMode === 'absolute';
-    return P;
-  }
-  function fac(P,p){
-    return {
-      vol: effVol(P,p),
-      price: Math.pow(1+P.priceInc,p-1),
-      mat: Math.pow(1+P.matInf,p-1),
-      lab: Math.pow(1+P.labInc,p-1)
-    };
-  }
+  const ctx = () => pnlCtx(state.pnlAssumptions || {});
 
   function openModal(eyebrow, title, html){
     eyebrowEl.textContent = eyebrow; titleEl.textContent = title;
@@ -1167,124 +1174,115 @@ $("#btnReset").onclick = () => {
   }
 
   function periodTotals(p,P){
-    const f = fac(P,p); let rev=0,cogs=0,lab=0,opex=0;
+    const i = p-1; let rev=0,cogs=0,lab=0,opex=0;
     state.products.forEach(pr=>{ if(!pr.on) return;
-      const units = unitsFor(pr,p,P);
-      rev += pr.price*(pr.fPrice?f.price:1)*units;
+      rev += prodRevenue(pr,P,i);
       state.recipes.filter(r=>r.product===pr.name).forEach(r=>{
         const mo = r.linkedMaterial ? state.materials.find(m=>m.name===r.linkedMaterial) : null;
-        const mf = (mo ? mo.fInfl!==false : true) ? f.mat : 1;
-        cogs += getLineCost(r)*mf*units;
+        cogs += lineCogs(pr,r,mo,P,i);
       });
     });
-    state.labor.forEach(l=>{ lab += (l.qty*l.price)/P.openDays*P.periodDays*(l.fGrow?f.lab:1); });
-    state.overhead.forEach(o=>{ opex += (o.qty*o.price)/P.openDays*P.periodDays*(o.fGrow?f.vol:1); });
-    opex += P.extra;
+    state.labor.forEach(l=>{ lab += lineLabour(l,P,i); });
+    state.overhead.forEach(o=>{ opex += lineOverhead(o,P,i); });
+    opex += extraFor(P,i);
     return {rev,cogs,lab,opex,gross:rev-cogs,net:rev-cogs-lab-opex};
   }
 
   function productDetail(pr,p,P){
-    const f = fac(P,p);
-    const units = unitsFor(pr,p,P);
-    const price = pr.price*(pr.fPrice?f.price:1);
-    const revenue = price*units;
+    const i = p-1;
+    const units = prodUnits(pr,P,i);
+    const revenue = prodRevenue(pr,P,i);
+    const avgPrice = units>0 ? revenue/units : pr.price;
     let html = '<div class="dtl-section">Sales — '+P.label+' '+p+'</div>';
     html += kv('Base selling price', money(pr.price));
-    html += kv('Price this period'+(pr.fPrice?' (after increases)':' (price toggle off)'), money(price));
-    const unitsLabel = !pr.fGrow ? 'Units sold (growth off, flat at base)'
-      : (P.abs ? 'Units sold (base plus fixed monthly increase)' : 'Units sold (volume factor ×'+f.vol.toFixed(3)+')');
-    html += kv(unitsLabel, num(units)+' units');
+    html += kv('Average price this period'+(pr.fPrice?'':' (price toggle off)'), money(avgPrice));
+    html += kv('Units sold this period'+(pr.fGrow?'':' (growth off, flat)'), num(units)+' units');
     html += kv('Revenue', money(revenue));
     html += '<div class="dtl-section">Ingredient cost breakdown</div>';
     const rows = []; let tot = 0;
     state.recipes.filter(r=>r.product===pr.name).forEach(r=>{
       const mat = r.linkedMaterial ? state.materials.find(m=>m.name===r.linkedMaterial) : null;
-      const mf = (mat ? mat.fInfl!==false : true) ? f.mat : 1;
-      const per = getLineCost(r)*mf;
-      const line = per*units; tot += line;
+      const line = lineCogs(pr,r,mat,P,i); tot += line;
+      const perUnit = units>0 ? line/units : getLineCost(r);
       rows.push([esc(r.ingredient||'(unnamed)'), num(r.qty||0), esc(r.linkedMaterial||'(manual)'),
         mat? num(r.conversionFactor||0) : '—',
-        mat? money(mat.price*mf) : '—',
-        money(per), money(line)]);
+        money(perUnit), money(line)]);
     });
-    html += table(['Ingredient','Qty/portion','Linked material','Factor','Material rate (period)','Cost/unit (period)','Total (period)'], rows, ['Total','','','','','',money(tot)]);
+    html += table(['Ingredient','Qty/portion','Linked material','Factor','Cost/unit (avg)','Total (period)'], rows, ['Total','','','','',money(tot)]);
     html += kv('Gross profit this period', money(revenue-tot));
     html += kv('Margin', revenue>0 ? ((revenue-tot)/revenue*100).toFixed(1)+'%' : '—');
-    html += '<p class="dtl-note">Factor = share of one purchase unit of the linked material used per portion. Rates include the material-inflation assumption for this period.</p>';
+    html += '<p class="dtl-note">Amounts are integrated over the '+P.label.toLowerCase()+'. Rates use the per-month assumptions applied across the period.</p>';
     return html;
   }
 
   function materialDetail(matName,p,P){
-    const f = fac(P,p);
+    const i = p-1;
     const mat = state.materials.find(m=>m.name===matName);
-    const inflOn = mat ? mat.fInfl!==false : true;
-    const mf = inflOn ? f.mat : 1;
-    const rows = []; let tot=0, totQty=0;
+    const rows = []; let tot=0;
     state.products.forEach(pr=>{ if(!pr.on) return;
-      const units = unitsFor(pr,p,P);
+      const units = prodUnits(pr,P,i);
       state.recipes.filter(r=>r.product===pr.name && (r.linkedMaterial||r.ingredient||'Unlinked')===matName).forEach(r=>{
-        const per = getLineCost(r)*mf;
-        const amount = per*units;
+        const amount = lineCogs(pr,r,mat,P,i);
+        const perUnit = units>0 ? amount/units : getLineCost(r);
         const qty = mat ? units*(r.conversionFactor||0)*(+r.qty||0) : null;
-        tot += amount; if(qty!==null) totQty += qty;
+        tot += amount;
         rows.push([esc(pr.name), num(units)+' units', mat? num(r.conversionFactor||0)+' /unit':'—',
-          qty!==null? num(qty)+' purchase units':'—', money(per), money(amount)]);
+          qty!==null? num(qty)+' purchase units':'—', money(perUnit), money(amount)]);
       });
     });
+    const inflOn = mat ? mat.fInfl!==false : true;
     let html = '<div class="dtl-section">'+esc(matName)+' — '+P.label+' '+p+'</div>';
-    if(mat){ html += kv('Base purchase price (Tab ②)', money(mat.price)); html += kv('Rate this period'+(inflOn?' (after inflation)':' (inflation off)'), money(mat.price*mf)); }
-    html += table(['Product','Units sold','Factor','Qty consumed','Cost/unit (period)','Amount'], rows, ['Total','','', mat? num(totQty)+' purchase units':'','',money(tot)]);
+    if(mat){ html += kv('Base purchase price (Tab ②)', money(mat.price)); html += kv('Inflation', inflOn?'On (per-month inflation applies)':'Off (held at base cost)'); }
+    html += table(['Product','Units sold','Factor','Qty consumed','Cost/unit (avg)','Amount'], rows, ['Total','','','','',money(tot)]);
     return html;
   }
 
   function laborDetail(l,p,P){
-    const f = fac(P,p);
-    const lf = l.fGrow ? f.lab : 1;
+    const i = p-1;
     const monthly = l.qty*l.price;
-    const amount = monthly/P.openDays*P.periodDays*lf;
-    let h = kv('Labour toggle', l.fGrow ? 'On (pay rises per period)' : 'Off (flat)');
+    const amount = lineLabour(l,P,i);
+    const flat = monthly*P.mStep;
+    let h = kv('Labour toggle', l.fGrow ? 'On (pay rises per month)' : 'Off (flat)');
     h += kv('Staff count', num(l.qty));
     h += kv('Monthly pay per person', money(l.price));
     h += kv('Monthly total (base)', money(monthly));
-    h += kv('Labour increase factor ('+P.label+' '+p+')', '×'+lf.toFixed(4));
-    h += kv('Days in period', num(P.periodDays));
+    h += kv('Months in this period', num(P.mStep));
+    h += kv('Growth uplift this period', flat>0 ? '×'+(amount/flat).toFixed(4) : '×1');
     h += kv('Amount this period', money(amount));
     return h;
   }
 
   function overheadDetail(o,p,P){
-    const f = fac(P,p);
+    const i = p-1;
     const grows = !!o.fGrow;
-    const vf = grows ? f.vol : 1;
     const monthly = o.qty*o.price;
-    const amount = monthly/P.openDays*P.periodDays*vf;
+    const amount = lineOverhead(o,P,i);
+    const flat = monthly*P.mStep;
     let h = kv('Growth toggle', grows ? 'On (scales with volume)' : 'Off (flat)');
     h += kv('Monthly (base)', money(monthly));
-    h += kv('Scaling factor this period', '×'+vf.toFixed(4));
-    h += kv('Days in period', num(P.periodDays));
+    h += kv('Months in this period', num(P.mStep));
+    h += kv('Scaling this period', flat>0 ? '×'+(amount/flat).toFixed(4) : '×1');
     h += kv('Amount this period', money(amount));
     if(!grows) h += '<p class="dtl-note">This line is flat. Turn on its Growth toggle in the statement to let it scale with volume.</p>';
     return h;
   }
 
   function totalRevenueDetail(p,P){
-    const f = fac(P,p); const rows = []; let tot=0;
+    const i = p-1; const rows = []; let tot=0;
     state.products.forEach(pr=>{ if(!pr.on) return;
-      const units = unitsFor(pr,p,P);
-      const price = pr.price*(pr.fPrice?f.price:1); const rev = price*units; tot += rev;
-      rows.push([esc(pr.name), num(units)+' units', money(price), money(rev)]);
+      const units = prodUnits(pr,P,i); const rev = prodRevenue(pr,P,i); tot += rev;
+      const avg = units>0 ? rev/units : pr.price;
+      rows.push([esc(pr.name), num(units)+' units', money(avg), money(rev)]);
     });
-    return table(['Product','Units sold','Price (period)','Revenue'], rows, ['Total','','',money(tot)]);
+    return table(['Product','Units sold','Avg price (period)','Revenue'], rows, ['Total','','',money(tot)]);
   }
   function totalCogsDetail(p,P){
-    const f = fac(P,p); const map = {};
+    const i = p-1; const map = {};
     state.products.forEach(pr=>{ if(!pr.on) return;
-      const units = unitsFor(pr,p,P);
       state.recipes.filter(r=>r.product===pr.name).forEach(r=>{
         const k = r.linkedMaterial||r.ingredient||'Unlinked';
         const mo = r.linkedMaterial ? state.materials.find(m=>m.name===r.linkedMaterial) : null;
-        const mf = (mo ? mo.fInfl!==false : true) ? f.mat : 1;
-        map[k] = (map[k]||0) + getLineCost(r)*mf*units;
+        map[k] = (map[k]||0) + lineCogs(pr,r,mo,P,i);
       });
     });
     const rows = Object.keys(map).map(k=>[esc(k)+(k==='Unlinked'?' (manual)':''), money(map[k])]);
@@ -1292,21 +1290,21 @@ $("#btnReset").onclick = () => {
     return table(['Material / ingredient group','Amount'], rows, ['Total', money(tot)]);
   }
   function totalLabourDetail(p,P){
-    const f = fac(P,p); const rows = []; let tot=0;
+    const i = p-1; const rows = []; let tot=0;
     state.labor.forEach(l=>{
-      const amt = (l.qty*l.price)/P.openDays*P.periodDays*(l.fGrow?f.lab:1); tot += amt;
+      const amt = lineLabour(l,P,i); tot += amt;
       rows.push([esc(l.name), num(l.qty), money(l.price), money(amt)]);
     });
     return table(['Role','Staff','Monthly pay/person','Amount (period)'], rows, ['Total','','',money(tot)]);
   }
   function totalOpexDetail(p,P){
-    const f = fac(P,p); const rows = []; let tot=0;
+    const i = p-1; const rows = []; let tot=0;
     state.overhead.forEach(o=>{
-      const grows = !!o.fGrow;
-      const amt = (o.qty*o.price)/P.openDays*P.periodDays*(grows?f.vol:1); tot += amt;
-      rows.push([esc(o.name), grows?'Scales':'Flat', money(o.qty*o.price), money(amt)]);
+      const amt = lineOverhead(o,P,i); tot += amt;
+      rows.push([esc(o.name), o.fGrow?'Scales':'Flat', money(o.qty*o.price), money(amt)]);
     });
-    if(P.extra>0){ rows.push(['Extra expenses (assumption)','Fixed','—',money(P.extra)]); tot += P.extra; }
+    const ex = extraFor(P,i);
+    if(ex>0){ rows.push(['Extra expenses (assumption)','Flat',money(P.extra)+' /mo',money(ex)]); tot += ex; }
     return table(['Expense','Type','Monthly (base)','Amount (period)'], rows, ['Total','','',money(tot)]);
   }
   function grossDetail(p,P){
@@ -1319,11 +1317,12 @@ $("#btnReset").onclick = () => {
   }
   function cumDetail(p,P){
     const rows = []; let cum=0;
-    for(let i=1;i<=p;i++){ const n = periodTotals(i,P).net; cum += n; rows.push([P.label+' '+i, money(n), money(cum)]); }
+    for(let k=1;k<=p;k++){ const n = periodTotals(k,P).net; cum += n; rows.push([P.label+' '+k, money(n), money(cum)]); }
     return table(['Period','Net profit','Cumulative'], rows, ['Up to '+P.label+' '+p,'',money(cum)]);
   }
   function extraDetail(p,P){
-    return kv('Extra fixed expenses per period', money(P.extra)) + '<p class="dtl-note">Set in the Forecast Assumptions panel below the statement.</p>';
+    const i = p-1;
+    return kv('Extra fixed expenses per month', money(P.extra)) + kv('Months in this period', num(P.mStep)) + kv('Amount this period', money(extraFor(P,i))) + '<p class="dtl-note">Set in the Forecast Assumptions panel below the statement.</p>';
   }
 
   content.addEventListener('click', e=>{
@@ -1349,7 +1348,8 @@ $("#btnReset").onclick = () => {
     if(!tr || tr.classList.contains('section-header')) return;
     const idx = td.cellIndex;
     if(idx <= 0) return;
-    const label = tr.cells[0].textContent.trim();
+    const lc = tr.cells[0];
+    const label = (lc.getAttribute('data-label') || lc.textContent).trim();
     if(label.endsWith('%')) return;
     const P = ctx();
     const p = idx;
